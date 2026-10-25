@@ -1,0 +1,196 @@
+<bloome-quick-add
+  data-loading="{{ 'library.loading' | t }}"
+  data-error="{{ 'library.quick_error' | t }}"
+  data-sold="{{ 'bloome.sold' | t }}"
+  data-add="{{ 'bloome.add' | t }}"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
+  data-locale="{{ request.locale.iso_code }}"
+>
+  <dialog aria-labelledby="QuickAddTitle-{{ section.id }}">
+    <button type="button" class="quick-close" data-close aria-label="{{ 'library.close' | t }}">
+      &#10005;
+    </button>
+    <p data-status role="status"></p>
+    <div class="quick-layout" hidden>
+      <div data-image></div>
+      <div>
+        <h2 id="QuickAddTitle-{{ section.id }}"></h2>
+        <a class="text-link" data-link>{{ 'library.product_details' | t }}</a>
+        <form method="post" action="{{ routes.cart_add_url }}">
+          <label for="QuickVariant-{{ section.id }}">{{ 'bloome.variant' | t }}</label>
+          <select id="QuickVariant-{{ section.id }}" name="id" required></select>
+          <label for="QuickQty-{{ section.id }}">{{ 'bloome.quantity' | t }}</label>
+          <input id="QuickQty-{{ section.id }}" type="number" name="quantity" min="1" value="1">
+          <button type="submit" class="button" data-add>{{ 'bloome.add' | t }}</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+</bloome-quick-add>
+{% stylesheet %}
+
+  bloome-quick-add dialog {
+    margin: auto;
+    width: min(850px, calc(100% - 35px));
+    max-height: 85svh;
+    overflow: auto;
+    border: 0;
+    padding: 35px;
+    background: var(--color-background);
+    color:var(--color-foreground);
+  }
+  bloome-quick-add dialog::backdrop {
+    background: #25132088;
+  }
+  .quick-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  .quick-layout[hidden] {
+    display: none;
+  }
+  .quick-layout h2 {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin: 20px 0;
+  }
+  .quick-layout form {
+    display: grid;
+    gap: 12px;
+    margin-top: 25px;
+  }
+  .quick-layout label {
+    font-size: 12px;
+  }
+  .quick-layout input {
+    width: 90px;
+  }
+  .quick-layout img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  .quick-close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+  @media (max-width: 600px) {
+    .quick-layout {
+      grid-template-columns: 1fr;
+    }
+    .quick-layout img {
+      max-height: 250px;
+    }
+  }
+
+{% endstylesheet %}
+{% javascript %}
+  class BloomeQuickAdd extends HTMLElement {
+    connectedCallback() {
+      if (this.ready) return;
+      this.ready = true;
+      this.dialog = this.querySelector('dialog');
+      this.click = (e) => {
+        const button = e.target.closest('[data-quick-product]');
+        if (button) {
+          if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          this.open(button);
+        }
+      };
+      document.addEventListener('click', this.click);
+      this.querySelector('[data-close]').addEventListener('click', () => this.dialog.close());
+      this.dialog.addEventListener('close', () => {
+        this.abort?.abort();
+        this.trigger?.focus();
+      });
+      this.querySelector('select').addEventListener('change', () => this.update());
+    }
+    update() {
+      const selected = this.querySelector('select').selectedOptions[0];
+      const button = this.querySelector('[data-add]');
+      button.disabled = !selected || selected.disabled;
+      button.textContent = button.disabled ? this.dataset.sold : this.dataset.add;
+    }
+    async open(button) {
+      this.trigger = button;
+      this.abort?.abort();
+      this.abort = new AbortController();
+      const status = this.querySelector('[data-status]');
+      status.textContent = this.dataset.loading;
+      this.querySelector('.quick-layout').hidden = true;
+      if (!this.dialog.open) this.dialog.showModal();
+      try {
+        const url = new URL(button.dataset.quickProduct, location.origin);
+        url.search = '';
+        url.pathname += '.js';
+        const response = await fetch(url, { signal: this.abort.signal });
+        if (!response.ok) throw new Error();
+        const product = await response.json();
+        if (!this.dialog.open) return;
+        this.querySelector('h2').textContent = product.title;
+        const link = this.querySelector('[data-link]');
+        link.href = button.dataset.quickProduct;
+        const imageSlot = this.querySelector('[data-image]');
+        imageSlot.replaceChildren();
+        if (product.featured_image) {
+          const img = document.createElement('img');
+          img.src = product.featured_image;
+          img.alt = product.title;
+          img.width = 600;
+          img.height = 600;
+          imageSlot.append(img);
+        }
+        const mediaUrl=new URL(button.dataset.quickProduct,location.origin);mediaUrl.searchParams.set('section_id','quick-product-media');fetch(mediaUrl,{signal:this.abort.signal}).then(response=>response.ok?response.text():'').then(text=>{const media=new DOMParser().parseFromString(text,'text/html').querySelector('[data-quick-media]');if(media&&this.dialog.open&&this.trigger===button)imageSlot.replaceChildren(media);}).catch(()=>{});
+        const select = this.querySelector('select');
+        select.replaceChildren();
+        const money = new Intl.NumberFormat(this.dataset.locale || 'en', {
+          style: 'currency',
+          currency: this.dataset.currency || 'USD',
+        });
+        const requestedVariant=new URL(button.dataset.quickProduct,location.origin).searchParams.get('variant');
+        const availableRequested=product.variants.some(variant=>String(variant.id)===requestedVariant&&variant.available);
+        let found = false;
+        product.variants.forEach((variant) => {
+          const option = document.createElement('option');
+          option.value = variant.id;
+          option.disabled = !variant.available;
+          option.textContent =
+            variant.title +
+            ' / ' +
+            money.format(variant.price / 100) +
+            (variant.available ? '' : ' / ' + this.dataset.sold);
+          if (variant.available && !found && (!availableRequested || String(variant.id)===requestedVariant)) {
+            option.selected = true;
+            found = true;
+          }
+          select.append(option);
+        });
+        this.querySelector('input[name=quantity]').value = 1;
+        this.update();
+        status.textContent = '';
+        this.querySelector('.quick-layout').hidden = false;
+      } catch (error) {
+        if (error.name !== 'AbortError') status.textContent = this.dataset.error;
+      }
+    }
+    disconnectedCallback() {
+      document.removeEventListener('click', this.click);
+      this.abort?.abort();
+      this.dialog.close();
+      this.ready = false;
+    }
+  }
+  if (!customElements.get('bloome-quick-add')) customElements.define('bloome-quick-add', BloomeQuickAdd);
+{% endjavascript %}
+{% schema %}
+{ "name": "t:library.quick_add.name", "limit": 1, "settings": [], "enabled_on": { "groups": ["footer"] } }
+{% endschema %}

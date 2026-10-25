@@ -1,0 +1,31 @@
+{% doc %}
+  Enhances an existing search form with accessible product suggestions.
+  @param {string} id - Unique result container identifier
+{% enddoc %}
+<bloome-predictive data-url="{{ routes.predictive_search_url }}">
+  <div id="{{ id }}" class="predictive-results" hidden></div>
+  <p class="visually-hidden" role="status" data-predictive-status></p>
+</bloome-predictive>
+{% stylesheet %}
+  bloome-predictive{display:block;flex-basis:100%}.predictive-results{padding:16px;border:1px solid var(--color-border);background:var(--color-background)}.predictive-results a{display:block;padding:12px;text-decoration:none}.predictive-results a:focus,.predictive-results a[aria-selected=true]{outline:2px solid var(--color-accent);outline-offset:-2px}.predictive-results img{width:48px;height:48px;object-fit:cover;display:inline-block;vertical-align:middle;margin-inline-end:12px}.bloome-search>form{flex-wrap:wrap}
+{% endstylesheet %}
+{% javascript %}
+class BloomePredictive extends HTMLElement{
+  connectedCallback(){
+    if(this.controller)return;this.controller=new AbortController();const signal=this.controller.signal;
+    this.form=this.closest('form');this.input=this.form?.querySelector('[name=q]');this.results=this.querySelector('.predictive-results');if(!this.input)return;
+    this.input.setAttribute('role','combobox');this.input.setAttribute('aria-autocomplete','list');this.input.setAttribute('aria-expanded','false');this.input.setAttribute('aria-controls',this.results.id);this.input.autocomplete='off';
+    this.input.addEventListener('input',()=>{clearTimeout(this.timer);this.request?.abort();this.close();const query=this.input.value.trim();if(query.length>1)this.timer=setTimeout(()=>this.search(query),250);},{signal});
+    this.form.addEventListener('keydown',event=>{const links=[...this.results.querySelectorAll('a')];if(event.key==='Escape'){this.close();this.input.focus();}if(!this.results.hidden&&links.length&&['ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();let index=links.indexOf(document.activeElement);index=(index+(event.key==='ArrowDown'?1:-1)+links.length)%links.length;links[index].focus();}},{signal});
+    this.form.addEventListener('focusout',()=>{setTimeout(()=>{if(!this.form.contains(document.activeElement))this.close();},0);},{signal});
+  }
+  close(){this.results.hidden=true;this.input.setAttribute('aria-expanded','false');}
+  async search(query){
+    if(!this.dataset.url)return;this.request=new AbortController();
+    try{const url=new URL(this.dataset.url,location.origin);url.searchParams.set('q',query);url.searchParams.set('section_id','predictive-search');url.searchParams.set('resources[limit]','6');const response=await fetch(url,{signal:this.request.signal});if(!response.ok)throw new Error('search');const doc=new DOMParser().parseFromString(await response.text(),'text/html');const content=doc.querySelector('[data-predictive-response]');if(this.input.value.trim()!==query||!content)return;this.results.replaceChildren(...content.childNodes);if(this.results.querySelector('a')){this.results.hidden=false;this.input.setAttribute('aria-expanded','true');this.querySelector('[data-predictive-status]').textContent=content.dataset.status||'';}}
+    catch(error){if(error.name!=='AbortError')this.close();}
+  }
+  disconnectedCallback(){clearTimeout(this.timer);this.request?.abort();this.controller?.abort();this.controller=null;}
+}
+if(!customElements.get('bloome-predictive'))customElements.define('bloome-predictive',BloomePredictive);
+{% endjavascript %}

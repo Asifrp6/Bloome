@@ -1,0 +1,19 @@
+{% doc %}
+  Lists pickup availability provided by Shopify for a selected variant.
+  @param {variant} variant - Variant to check
+{% enddoc %}
+{% assign pickup_locations = variant.store_availabilities | where: 'pick_up_enabled', true %}
+{% if pickup_locations.size > 0 %}
+  <details class="pickup-locations">
+    <summary>{{ 'editor.pickup_locations' | t }}</summary>
+    {% for availability in pickup_locations %}
+      <div>
+        <h3>{{ availability.location.name | escape }}</h3>
+        <p>{% if availability.available %}{{ 'editor.pickup_available' | t }} — {{ availability.pick_up_time | escape }}{% else %}{{ 'editor.pickup_unavailable' | t }}{% endif %}</p>
+        {{ availability.location.address | format_address }}
+        {% if availability.location.address.phone %}<p>{{ availability.location.address.phone | escape }}</p>{% endif %}
+      </div>
+    {% endfor %}
+  </details>
+{% endif %}
+{% stylesheet %}.pickup-locations{margin-block:24px;font-size:14px}.pickup-locations summary{cursor:pointer}.pickup-locations>div{padding-block:16px;border-bottom:1px solid var(--color-border)}.pickup-locations h3{font-size:16px}.pickup-locations p{margin-top:10px}{% endstylesheet %}

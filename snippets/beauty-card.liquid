@@ -1,0 +1,168 @@
+{% doc %}
+  Renders a product card or decorative sample card.
+
+  @param {product} [card_product] - Product to display.
+  @param {number} [index] - Index for sample styling.
+{% enddoc %}
+<article class="beauty-card">
+  <a
+    class="card-image card-image--{{ index }}"
+    href="{{ card_product.url | default: routes.all_products_collection_url }}"
+  >
+    {%- if card_product.featured_image -%}
+      {{-
+        card_product.featured_image
+        | image_url: width: 700
+        | image_tag: loading: 'lazy', widths: '240, 400, 700', sizes: '(min-width:760px) 25vw, 50vw'
+      -}}
+    {%- else -%}
+      {%- render 'photo-fallback', index: index -%}
+    {%- endif -%}
+    {% if settings.show_second_image %}{% if card_product.images[1] != blank %}{{ card_product.images[1] | image_url: width:700 | image_tag: loading:'lazy', widths:'240, 400, 700', sizes:'(min-width:760px) 25vw, 50vw', class:'card-second-image' }}{% endif %}{% endif %}<span class="card-tag">
+      {%- if card_product == blank -%}
+        {{- 'bloome.preview' | t -}}
+      {%- else -%}
+        {% if card_product.available == false %}{{ 'bloome.sold' | t }}{% elsif settings.show_sale_badge %}{% if card_product.compare_at_price > card_product.price %}{{ 'editor.sale' | t }}{% else %}{{ 'bloome.discover' | t }}{% endif %}{% else %}{{ 'bloome.discover' | t }}{% endif %}
+      {%- endif -%}</span
+    ><span class="card-arrow" aria-hidden="true">&#8599;</span></a
+  >
+  {% if settings.enable_quick_add %}{% if card_product.available -%}
+    <button type="button" class="beauty-quick-add" data-quick-product="{{ card_product.url }}">
+      {{ 'library.quick_add' | t }} +
+    </button>
+  {%- endif %}
+  {% endif %}<div class="card-info">
+    <h3>
+      <a href="{{ card_product.url | default: routes.all_products_collection_url }}">
+        {%- if card_product -%}
+          {{- card_product.title | escape -}}
+        {%- else -%}
+          {%- case index -%}
+            {%- when 2 -%}
+              {{- 'bloome.demo_cream' | t -}}
+            {%- when 3 -%}
+              {{- 'bloome.demo_lip' | t -}}
+            {%- when 4 -%}
+              {{- 'bloome.demo_serum' | t -}}
+            {%- else -%}
+              {{- 'bloome.demo_dew' | t -}}
+          {%- endcase -%}
+        {%- endif -%}
+      </a>
+    </h3>
+    {% if card_product -%}
+      {% if card_product.price_varies %}<span class="bl-muted">{{ 'bloome.from' | t }}</span>{% endif %}{% render 'price', item: card_product %}
+    {%- endif %}
+  </div>
+  {% if settings.show_vendor %}{% if card_product != blank %}<p class="card-type">{{ card_product.vendor | escape }}</p>{% endif %}{% endif %}{% if settings.show_product_type %}<p class="card-type">
+    {% if card_product %}{{ card_product.type | escape }}{% else %}{{ 'bloome.sample' | t }}{% endif %}
+  </p>
+{% endif %}</article>
+{% stylesheet %}
+.card-image .card-second-image{position:absolute;inset:0;opacity:0;transition:opacity .25s}.card-image:hover .card-second-image,.card-image:focus-visible .card-second-image{opacity:1}.card-image{aspect-ratio:var(--card-ratio,1);border-radius:var(--card-radius,0)}.card-image img{object-fit:var(--card-fit,cover)}
+
+
+  .beauty-quick-add {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: inherit;
+    font-size: 12px;
+    min-height: 36px;
+    border-radius: 8px;
+    margin-top: 7px;
+  }
+  .card-image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio:var(--card-ratio,1);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .card-image--2 {
+    background: #e9e4e8;
+  }
+  .card-image--3 {
+    background: #e9d4cc;
+  }
+  .card-image--4 {
+    background: #e3e4d6;
+  }
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit:var(--card-fit,cover);
+    transition: transform 0.4s;
+  }
+  .card-image:hover img {
+    transform: scale(1.04);
+  }
+  .card-image .beauty-object {
+    scale: 0.76;
+    transition: transform 0.4s;
+  }
+  .card-image:hover .beauty-object {
+    transform: rotate(0);
+  }
+  .card-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 10px;
+    background: #fff9efb8;
+    padding: 5px 9px;
+    border-radius: 999px;
+  }
+  .card-arrow {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff9ef;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+  }
+  .card-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .card-info h3 {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    flex: 1 1 140px;
+  }
+  .card-type {
+    font-size: 11px;
+    color: color-mix(in srgb,var(--color-foreground) 75%,transparent);
+    margin-top: 4px;
+  }
+  @media (max-width: 760px) {
+    .card-image .beauty-object {
+      scale: 0.6;
+    }
+    .card-image {
+      aspect-ratio:var(--card-ratio,1);
+    }
+    .card-info {
+      flex-wrap: wrap;
+    }
+    .card-tag {
+      top: 10px;
+      left: 10px;
+      font-size: 10px;
+    }
+  }
+
+{% endstylesheet %}

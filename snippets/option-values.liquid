@@ -1,0 +1,8 @@
+{% doc %}
+  Renders up to 50 product option values, starting at an offset.
+  @param {object} product_option - Option whose values are rendered
+  @param {number} skip - Number of values to skip
+{% enddoc %}
+{% for option_value in product_option.values offset: skip limit: 50 %}
+  <option value="{{ option_value | escape }}" {% if product_option.selected_value == option_value %}selected{% endif %}>{{ option_value | escape }}</option>
+{% endfor %}

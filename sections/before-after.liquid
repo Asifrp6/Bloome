@@ -1,0 +1,334 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section bl-component-before-after">
+  {% render 'library-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading -%}
+  <bloome-compare>
+    <div class="bl-compare" style="--position:50%">
+      <div class="bl-before">
+        {% render 'library-media', image: section.settings.before, kind: 'serum' -%}
+        <span>{{ section.settings.before_label | escape }}</span>
+      </div>
+      <div class="bl-after">
+        {% render 'library-media', image: section.settings.after, kind: 'cream' -%}
+        <span>{{ section.settings.after_label | escape }}</span>
+      </div>
+      <div class="bl-compare-line" aria-hidden="true">&#8596;</div>
+      <label class="visually-hidden" for="Compare-{{ section.id }}">{{ 'library.compare' | t }}</label
+      ><input
+        id="Compare-{{ section.id }}"
+        type="range"
+        min="0"
+        max="100"
+        value="50"
+        aria-valuetext="{{ 'library.comparison_initial' | t }}"
+      >
+    </div>
+  </bloome-compare>
+  <div class="bl-rte bl-comparison-note">{{ section.settings.text }}</div>
+</div>
+{% stylesheet %}
+
+  .bl-compare {
+    position: relative;
+    aspect-ratio: 1.65;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .bl-before,
+  .bl-after {
+    position: absolute;
+    inset: 0;
+  }
+  .bl-compare .bl-media {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .bl-after {
+    clip-path: inset(0 0 0 var(--position));
+    background: #e8dce0;
+  }
+  .bl-after .bl-media {
+    background: #e8dce0;
+  }
+  .bl-before > span,
+  .bl-after > span {
+    position: absolute;
+    bottom: 20px;
+    padding: 10px 16px;
+    background: #fff8eb;
+    font-size: 12px;
+  }
+  .bl-before > span {
+    left: 20px;
+  }
+  .bl-after > span {
+    right: 20px;
+  }
+  .bl-compare-line {
+    position: absolute;
+    left: var(--position);
+    top: 0;
+    bottom: 0;
+    border-left: 2px solid #fff8eb;
+    display: grid;
+    place-items: center;
+    color:var(--color-foreground);
+    font-size: 26px;
+    pointer-events: none;
+  }
+  .bl-compare input[type='range'] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: ew-resize;
+    padding: 0;
+  }
+  .bl-compare:focus-within {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+  .bl-comparison-note {
+    margin-top: 18px;
+    font-size: 12px;
+  }
+  @media (max-width: 760px) {
+    .bl-compare {
+      aspect-ratio: 1;
+    }
+  }
+
+{% endstylesheet %}
+{% javascript %}
+  class BloomeCompare extends HTMLElement {
+    connectedCallback() {
+      if (this.ready) return;
+      this.ready = true;
+      const input = this.querySelector('input');
+      input.addEventListener('input', () => {
+        this.querySelector('.bl-compare').style.setProperty('--position', input.value + '%');
+        input.setAttribute('aria-valuetext', input.value + '%');
+      });
+    }
+  }
+  if (!customElements.get('bloome-compare')) customElements.define('bloome-compare', BloomeCompare);
+{% endjavascript %}
+{% schema %}
+{
+  "name": "t:library.before_after.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.before_after.eyebrow",
+      "default": "The Bloome edit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.before_after.heading",
+      "default": "A different perspective."
+    },
+    {
+      "type": "image_picker",
+      "id": "before",
+      "label": "t:library.before_after.before"
+    },
+    {
+      "type": "image_picker",
+      "id": "after",
+      "label": "t:library.before_after.after"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "t:library.before_after.before_label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "t:library.before_after.after_label",
+      "default": "After"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:library.before_after.text",
+      "default": "<p>Explore the details. Move the slider to compare the two images.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "presets": [
+    {
+      "name": "t:library.before_after.name"
+    }
+  ]
+}
+{% endschema %}

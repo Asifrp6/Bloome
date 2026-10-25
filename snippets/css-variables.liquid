@@ -1,0 +1,42 @@
+{% doc %}
+  Outputs the global Bloome design tokens and merchant color schemes.
+{% enddoc %}
+{% style %}
+  {{ settings.type_primary_font | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ settings.type_heading_font | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {{ settings.type_heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ settings.type_heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {{ settings.type_heading_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  :root {
+    --font-primary--family: {{ settings.type_primary_font.family | default: "Arial" }}, {{ settings.type_primary_font.fallback_families | default: "sans-serif" }};
+    --font-heading-family: {{ settings.type_heading_font.family | default: "Arial" }}, {{ settings.type_heading_font.fallback_families | default: "sans-serif" }};
+    --font-body-weight: {{ settings.type_primary_font.weight | default: 400 }};
+    --font-heading-weight: {{ settings.type_heading_font.weight | default: 400 }};
+    --body-font-size: {{ settings.body_font_size | default: 14 }}px;
+    --heading-scale: {{ settings.heading_scale | default: 100 | divided_by: 100.0 }};
+    --heading-case: {{ settings.heading_case | default: "none" }};
+    --page-width: {{ settings.max_page_width | default: "90rem" }};
+    --page-margin: {{ settings.min_page_margin | default: 30 }}px;
+    --color-background: {{ settings.background_color | default: "#FAF7EF" }};
+    --color-foreground: {{ settings.foreground_color | default: "#49323F" }};
+    --color-accent: {{ settings.accent_color | default: "#7E4F60" }};
+    --color-surface: {{ settings.surface_color | default: "#EEE8DE" }};
+    --color-border: {{ settings.border_color | default: "#CFC5BA" }};
+    --button-background: {{ settings.button_background | default: "#49323F" }};
+    --button-foreground: {{ settings.button_foreground | default: "#FFF8EB" }};
+    --button-radius: {{ settings.button_radius | default: 2 }}px;
+    --button-font-size: {{ settings.button_font_size | default: 13 }}px;
+    --button-border-width: {{ settings.button_border_width | default: 1 }}px;
+    --style-border-radius-inputs: {{ settings.input_corner_radius | default: 4 }}px;
+    --grid-gap: {{ settings.grid_gap | default: 20 }}px;
+    --card-ratio: {{ settings.card_image_ratio | default: "1" }};
+    --card-fit: {{ settings.card_image_fit | default: "cover" }};
+    --card-radius: {{ settings.card_corner_radius | default: 12 }}px;
+    --mobile-product-columns: {{ settings.products_mobile_columns | default: "2" }};
+    --logo-width: {{ settings.logo_width | default: 150 }}px;
+  }
+  @media(max-width:760px){:root{--page-margin:{{ settings.mobile_page_margin | default: 20 }}px}}
+{% endstyle %}

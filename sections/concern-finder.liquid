@@ -1,0 +1,130 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section concern-finder" style="grid-column:1 / -1;width:min(90rem,calc(100% - 40px));max-width:none;justify-self:center">
+  {% render 'library-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading %}
+  {% if section.blocks.size == 0 %}
+    <p class="bl-muted">{{ 'concern_finder.empty' | t }}</p>
+  {% else %}
+    {% liquid
+      assign concern_label = section.settings.heading
+      if concern_label == blank
+        assign concern_label = 'concern_finder.label' | t
+      endif
+    %}
+    <bloome-tabs class="concern-stage">
+      <div class="concern-rail" role="tablist" aria-label="{{ concern_label | escape }}">
+        {% for block in section.blocks %}
+          {% assign concern_index = forloop.index | prepend: '00' | slice: -2, 2 %}
+          <button type="button" role="tab" id="ConcernTab-{{ section.id }}-{{ block.id }}" aria-controls="ConcernPanel-{{ section.id }}-{{ block.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">
+            <span class="concern-index" aria-hidden="true">{{ concern_index }}</span>
+            <span>{{ block.settings.title | escape }}</span>
+          </button>
+        {% endfor %}
+      </div>
+      {% for block in section.blocks %}
+        {% assign concern_index = forloop.index | prepend: '00' | slice: -2, 2 %}
+        {% assign concern_url = block.settings.collection.url | default: routes.all_products_collection_url %}
+        <div class="concern-panel" id="ConcernPanel-{{ section.id }}-{{ block.id }}" role="tabpanel" aria-labelledby="ConcernTab-{{ section.id }}-{{ block.id }}" {% unless forloop.first %}hidden{% endunless %} {{ block.shopify_attributes }}>
+          <div class="concern-media">{% render 'library-media', image: block.settings.image, index: forloop.index %}</div>
+          <div class="concern-copy">
+            <h3>{{ block.settings.heading | default: block.settings.title | escape }}</h3>
+            {% if block.settings.text != blank %}<div class="bl-rte">{{ block.settings.text }}</div>{% endif %}
+            {% if block.settings.button != blank %}<a class="button" href="{{ concern_url }}">{{ block.settings.button | escape }}</a>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </bloome-tabs>
+  {% endif %}
+</div>
+{% stylesheet %}
+.concern-finder > .bl-heading { margin-bottom: 22px; }
+.concern-finder > .bl-heading h2 { max-width: 16em; line-height: 1.05; }
+.concern-stage { display: grid; gap: 18px; }
+.concern-rail { display: flex; flex-wrap: wrap; gap: 8px; }
+.concern-rail [role="tab"] { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 16px 6px 6px; border: 1px solid color-mix(in srgb, currentColor 14%, transparent); border-radius: 999px; background: transparent; color: inherit; text-align: left; font-size: 14px; }
+.concern-index { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-surface); font-size: 11px; letter-spacing: 0.04em; }
+.concern-rail [role="tab"][aria-selected="true"] { background: var(--color-foreground); color: var(--color-background); border-color: var(--color-foreground); }
+.concern-rail [role="tab"][aria-selected="true"] .concern-index { background: color-mix(in srgb, var(--color-background) 18%, transparent); }
+.concern-panel { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.7fr); gap: 16px; align-items: stretch; }
+.concern-media .bl-media { aspect-ratio: 5 / 4; border-radius: 32px; overflow: hidden; background: var(--color-surface); }
+.concern-media img { width: 100%; height: 100%; object-fit: cover; }
+.concern-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 4vw, 48px); border-radius: 32px; background: var(--color-surface); min-height: 100%; }
+.concern-copy h3 { max-width: 12em; overflow-wrap: normal; word-break: normal; hyphens: none; font-size: clamp(28px, 3vw, 44px); font-weight: 500; letter-spacing: -0.045em; line-height: 1.08; margin-bottom: 14px; }
+.concern-copy .bl-rte { max-width: 34em; line-height: 1.65; }
+.concern-copy .button { align-self: flex-start; margin-top: 22px; min-height: 48px; padding: 12px 22px; border-radius: 999px; }
+.concern-panel:not([hidden]) .concern-copy { animation: concern-enter 0.4s ease both; }
+@keyframes concern-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 760px) {
+  .concern-panel { grid-template-columns: 1fr; }
+  .concern-media .bl-media { aspect-ratio: 4 / 3; min-height: 0; border-radius: 22px; }
+  .concern-copy { border-radius: 22px; min-height: 0; }
+  .concern-rail [role="tab"] { min-height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .concern-panel:not([hidden]) .concern-copy { animation: none; }
+  .concern-rail { scroll-behavior: auto; }
+}
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:library.concern_finder.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:library.concern_finder.eyebrow", "default": "Start with how skin feels" },
+    { "type": "text", "id": "heading", "label": "t:library.concern_finder.heading", "default": "Shop by concern." },
+    { "type": "header", "content": "t:editor.section_design" },
+    { "type": "color_scheme", "id": "section_color_scheme", "label": "t:editor.section_color_scheme", "default": "scheme-1" },
+    { "type": "select", "id": "content_width", "label": "t:editor.content_width", "default": "page", "options": [
+      { "value": "page", "label": "t:editor.content_width_0" },
+      { "value": "narrow", "label": "t:editor.content_width_1" },
+      { "value": "full", "label": "t:editor.content_width_2" }
+    ]},
+    { "type": "select", "id": "text_alignment", "label": "t:editor.text_alignment", "default": "left", "options": [
+      { "value": "left", "label": "t:editor.text_alignment_0" },
+      { "value": "center", "label": "t:editor.text_alignment_1" },
+      { "value": "right", "label": "t:editor.text_alignment_2" }
+    ]},
+    { "type": "checkbox", "id": "custom_typography", "label": "t:editor.custom_typography", "default": false },
+    { "type": "range", "id": "heading_size", "label": "t:editor.heading_size", "default": 46, "min": 24, "max": 100, "step": 1, "unit": "px", "visible_if": "{{ section.settings.custom_typography }}" },
+    { "type": "range", "id": "heading_mobile_size", "label": "t:editor.heading_mobile_size", "default": 34, "min": 22, "max": 72, "step": 1, "unit": "px", "visible_if": "{{ section.settings.custom_typography }}" },
+    { "type": "range", "id": "text_size", "label": "t:editor.text_size", "default": 14, "min": 12, "max": 22, "step": 1, "unit": "px", "visible_if": "{{ section.settings.custom_typography }}" },
+    { "type": "range", "id": "image_radius", "label": "t:editor.image_radius", "default": 28, "min": 0, "max": 40, "step": 1, "unit": "px" },
+    { "type": "range", "id": "section_gap", "label": "t:editor.section_gap", "default": 0, "min": 0, "max": 40, "step": 1, "unit": "px" },
+    { "type": "header", "content": "t:editor.section_spacing" },
+    { "type": "range", "id": "padding_top", "label": "t:editor.padding_top", "default": 36, "min": 0, "max": 100, "step": 1, "unit": "px" },
+    { "type": "range", "id": "padding_bottom", "label": "t:editor.padding_bottom", "default": 20, "min": 0, "max": 100, "step": 1, "unit": "px" },
+    { "type": "range", "id": "padding_mobile_top", "label": "t:editor.padding_mobile_top", "default": 24, "min": 0, "max": 80, "step": 1, "unit": "px" },
+    { "type": "range", "id": "padding_mobile_bottom", "label": "t:editor.padding_mobile_bottom", "default": 12, "min": 0, "max": 80, "step": 1, "unit": "px" },
+    { "type": "header", "content": "t:editor.section_visibility" },
+    { "type": "checkbox", "id": "hide_desktop", "label": "t:editor.hide_desktop", "default": false },
+    { "type": "checkbox", "id": "hide_mobile", "label": "t:editor.hide_mobile", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "t:library.concern_finder.block_0",
+      "settings": [
+        { "type": "text", "id": "title", "label": "t:library.concern_finder.b0_title", "default": "Dryness" },
+        { "type": "text", "id": "heading", "label": "t:library.concern_finder.b0_heading", "default": "Comfort for skin that feels tight." },
+        { "type": "richtext", "id": "text", "label": "t:library.concern_finder.b0_text", "default": "<p>A softer place to start when skin wants moisture, not a long routine.</p>" },
+        { "type": "text", "id": "button", "label": "t:library.concern_finder.b0_button", "default": "Shop dryness" },
+        { "type": "collection", "id": "collection", "label": "t:library.concern_finder.b0_collection" },
+        { "type": "image_picker", "id": "image", "label": "t:library.concern_finder.b0_image" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "disabled_on": { "groups": ["header", "footer"] },
+  "presets": [
+    {
+      "name": "t:library.concern_finder.name",
+      "blocks": [
+        { "type": "concern", "settings": { "title": "Dryness", "heading": "Comfort for skin that feels tight.", "text": "<p>A softer place to start when skin wants moisture, not a long routine.</p>", "button": "Shop dryness" } },
+        { "type": "concern", "settings": { "title": "Dullness", "heading": "A fresher, more awake look.", "text": "<p>Light, everyday care for skin that wants to look a little more alive.</p>", "button": "Shop radiance" } },
+        { "type": "concern", "settings": { "title": "Uneven tone", "heading": "A more even-looking complexion.", "text": "<p>Gentle color care for the days you want skin to look smoother and clearer.</p>", "button": "Shop tone" } },
+        { "type": "concern", "settings": { "title": "Sensitivity", "heading": "A gentler daily ritual.", "text": "<p>Simple formulas for skin that prefers fewer steps and a calmer feel.</p>", "button": "Shop gentle care" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

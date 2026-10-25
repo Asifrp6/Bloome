@@ -1,0 +1,842 @@
+{
+  "sections": {
+    "section_1": {
+      "type": "slideshow",
+      "settings": {
+        "content_width": "full",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "padding_mobile_top": 0,
+        "padding_mobile_bottom": 0,
+        "desktop_height": 650,
+        "mobile_height": 560,
+        "show_thumbnails": true,
+        "show_arrows": true,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "ritual": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Your daily Bloome ritual",
+            "heading": "Good skin. Great energy.",
+            "text": "<p>Skin-loving essentials and feel-good color. Find your everyday favorites.</p>",
+            "button": "Shop skincare",
+            "background": "#D9BBC4",
+            "foreground": "#49323F",
+            "heading_color": "#49323F"
+          }
+        },
+        "color": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "A little color, a little confidence",
+            "heading": "Make room for your glow.",
+            "text": "<p>Meet makeup that moves with you, from the first swipe to the last plan.</p>",
+            "button": "Explore makeup",
+            "background": "#DAC5B0",
+            "foreground": "#49323F",
+            "heading_color": "#49323F"
+          }
+        },
+        "care": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Made for your everyday",
+            "heading": "Your skin. Your kind of care.",
+            "text": "<p>Build a beauty routine that feels like you.</p>",
+            "button": "Find your ritual",
+            "background": "#D4D9C8",
+            "foreground": "#49323F",
+            "heading_color": "#49323F"
+          }
+        }
+      },
+      "block_order": [
+        "ritual",
+        "color",
+        "care"
+      ]
+    },
+    "section_2": {
+      "type": "collection-list",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Find your kind of beauty.",
+        "columns": 4,
+        "mobile_columns": "2",
+        "shape": "circle",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "collection",
+          "settings": {
+            "title": "Skincare"
+          }
+        },
+        "block_2": {
+          "type": "collection",
+          "settings": {
+            "title": "Makeup"
+          }
+        },
+        "block_3": {
+          "type": "collection",
+          "settings": {
+            "title": "Lip care"
+          }
+        },
+        "block_4": {
+          "type": "collection",
+          "settings": {
+            "title": "Sets & gifts"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_3": {
+      "type": "collection-tabs",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "The essentials, your way.",
+        "limit": 4,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "collection",
+          "settings": {
+            "title": "Bestsellers"
+          }
+        },
+        "block_2": {
+          "type": "collection",
+          "settings": {
+            "title": "Skincare"
+          }
+        },
+        "block_3": {
+          "type": "collection",
+          "settings": {
+            "title": "New arrivals"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_4": {
+      "type": "content-with-video",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Made for your daily glow.",
+        "text": "<p>Discover the textures and little details behind your everyday essentials.</p>",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "product",
+          "settings": {
+            "title": "Your base"
+          }
+        },
+        "block_2": {
+          "type": "product",
+          "settings": {
+            "title": "Your colour"
+          }
+        },
+        "block_3": {
+          "type": "product",
+          "settings": {
+            "title": "Your finish"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_5": {
+      "type": "look-tabs",
+      "settings": {
+        "eyebrow": "",
+        "heading": "A look for every moment",
+        "section_color_scheme": "scheme-1",
+        "text_alignment": "center"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "step",
+          "settings": {
+            "title": "Everyday",
+            "heading": "Your everyday glow.",
+            "text": "<p>Explore textures, colours and essentials that fit your day.</p>",
+            "button": "Shop the ritual"
+          }
+        },
+        "block_2": {
+          "type": "step",
+          "settings": {
+            "title": "Soft glam",
+            "heading": "A little extra radiance.",
+            "text": "<p>Explore textures, colours and essentials that fit your day.</p>",
+            "button": "Shop the ritual"
+          }
+        },
+        "block_3": {
+          "type": "step",
+          "settings": {
+            "title": "Bold",
+            "heading": "Make it your own.",
+            "text": "<p>Explore textures, colours and essentials that fit your day.</p>",
+            "button": "Shop the ritual"
+          }
+        },
+        "party": {
+          "type": "step",
+          "settings": {
+            "title": "Party",
+            "heading": "Your moment to shine.",
+            "text": "<p>Find the textures and colors that make this moment yours.</p>",
+            "button": "Shop the look"
+          }
+        },
+        "bridal": {
+          "type": "step",
+          "settings": {
+            "title": "Bridal",
+            "heading": "Beautifully yours.",
+            "text": "<p>Find the textures and colors that make this moment yours.</p>",
+            "button": "Shop the look"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "party",
+        "bridal"
+      ]
+    },
+    "section_6": {
+      "type": "featured-product",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "One to fall in love with.",
+        "placeholder_title": "Meet your next daily favourite.",
+        "text": "<p>A little discovery for your daily ritual.</p>",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "buy_buttons",
+        "description"
+      ]
+    },
+    "section_7": {
+      "type": "gift-collections",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A little something, thoughtfully chosen.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "gift",
+          "settings": {
+            "title": "The daily set",
+            "heading": "Give a little daily luxury.",
+            "text": "<p>Discover a thoughtful edit of beauty essentials.</p>",
+            "button": "Explore gifts"
+          }
+        },
+        "block_2": {
+          "type": "gift",
+          "settings": {
+            "title": "Little luxuries",
+            "heading": "Give a little daily luxury.",
+            "text": "<p>Discover a thoughtful edit of beauty essentials.</p>",
+            "button": "Explore gifts"
+          }
+        },
+        "block_3": {
+          "type": "gift",
+          "settings": {
+            "title": "Travel rituals",
+            "heading": "Give a little daily luxury.",
+            "text": "<p>Discover a thoughtful edit of beauty essentials.</p>",
+            "button": "Explore gifts"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_8": {
+      "type": "routine-steps",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Small steps. Beautiful rituals.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "step",
+          "settings": {
+            "title": "01 / Cleanse",
+            "heading": "Start anew.",
+            "text": "<p>Explore textures, colours and essentials that fit your day.</p>",
+            "button": "Shop the ritual"
+          }
+        },
+        "block_2": {
+          "type": "step",
+          "settings": {
+            "title": "02 / Hydrate",
+            "heading": "A little daily dew.",
+            "text": "<p>Explore textures, colours and essentials that fit your day.</p>",
+            "button": "Shop the ritual"
+          }
+        },
+        "block_3": {
+          "type": "step",
+          "settings": {
+            "title": "03 / Finish",
+            "heading": "Your finishing touch.",
+            "text": "<p>Explore textures, colours and essentials that fit your day.</p>",
+            "button": "Shop the ritual"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_9": {
+      "type": "shop-by-price",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shop by price",
+        "columns": 4,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "budget",
+          "settings": {
+            "title": "Lip essentials",
+            "maximum": 25,
+            "description": "Lipsticks, glosses and liners",
+            "button": "Shop now"
+          }
+        },
+        "block_2": {
+          "type": "budget",
+          "settings": {
+            "title": "Face essentials",
+            "maximum": 29,
+            "description": "Blush, bronzer and highlighter",
+            "button": "Shop now"
+          }
+        },
+        "block_3": {
+          "type": "budget",
+          "settings": {
+            "title": "Eye essentials",
+            "maximum": 39,
+            "description": "Mascara, eyeliner and eyeshadow",
+            "button": "Shop now"
+          }
+        },
+        "block_4": {
+          "type": "budget",
+          "settings": {
+            "title": "Complexion edit",
+            "maximum": 59,
+            "description": "Foundation, concealer and setting essentials",
+            "button": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_10": {
+      "type": "scrolling-text",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "speed": 30,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "text",
+          "settings": {
+            "text": "Your ritual, your rules"
+          }
+        },
+        "block_2": {
+          "type": "text",
+          "settings": {
+            "text": "A little everyday luxury"
+          }
+        },
+        "block_3": {
+          "type": "text",
+          "settings": {
+            "text": "Room to be you"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_11": {
+      "type": "before-after",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A different perspective.",
+        "before_label": "Before",
+        "after_label": "After",
+        "text": "<p>Explore the details. Move the slider to compare the two images.</p>",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_12": {
+      "type": "product-finder",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Find your everyday match.",
+        "type_label": "What are you looking for?",
+        "types": "Serum,Moisturizer,Lip tint",
+        "tag_label": "Your preferred finish",
+        "tags": "Dewy,Matte,Natural",
+        "button": "Find my essentials",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_13": {
+      "type": "shop-the-look",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "The whole look, made yours.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Your base",
+            "x": 32,
+            "y": 30
+          }
+        },
+        "block_2": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Your colour",
+            "x": 65,
+            "y": 55
+          }
+        },
+        "block_3": {
+          "type": "hotspot",
+          "settings": {
+            "title": "Your finishing touch",
+            "x": 40,
+            "y": 75
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_14": {
+      "type": "video-gallery",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Rituals in motion.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "video",
+          "settings": {
+            "title": "The morning ritual"
+          }
+        },
+        "block_2": {
+          "type": "video",
+          "settings": {
+            "title": "A touch of colour"
+          }
+        },
+        "block_3": {
+          "type": "video",
+          "settings": {
+            "title": "Your evening reset"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_15": {
+      "type": "featured-blog",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Notes from our world.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "article",
+          "settings": {
+            "title": "Make space for your morning",
+            "text": "<p>Discover the little details behind your daily ritual.</p>"
+          }
+        },
+        "block_2": {
+          "type": "article",
+          "settings": {
+            "title": "Find your everyday finish",
+            "text": "<p>Discover the little details behind your daily ritual.</p>"
+          }
+        },
+        "block_3": {
+          "type": "article",
+          "settings": {
+            "title": "The art of a little reset",
+            "text": "<p>Discover the little details behind your daily ritual.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_16": {
+      "type": "social-gallery",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Life, in full Bloome.",
+        "columns": 4,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "image",
+          "settings": {
+            "caption": "Your daily ritual"
+          }
+        },
+        "block_2": {
+          "type": "image",
+          "settings": {
+            "caption": "A touch of colour"
+          }
+        },
+        "block_3": {
+          "type": "image",
+          "settings": {
+            "caption": "Soft mornings"
+          }
+        },
+        "block_4": {
+          "type": "image",
+          "settings": {
+            "caption": "Made for you"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_17": {
+      "type": "icon-benefits",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "The little things matter.",
+        "columns": 4,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Daily rituals",
+            "text": "A moment for yourself."
+          }
+        },
+        "block_2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Beautiful textures",
+            "text": "Find your favourite finish."
+          }
+        },
+        "block_3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Your own pace",
+            "text": "Small steps that fit your day."
+          }
+        },
+        "block_4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Room to explore",
+            "text": "Discover something new."
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_18": {
+      "type": "faq",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A little more clarity.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "question",
+          "settings": {
+            "question": "Where should I start?",
+            "answer": "<p>Explore the skincare and makeup edits to find your daily essentials.</p>"
+          }
+        },
+        "block_2": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I find product details?",
+            "answer": "<p>Each product page includes its description and available options.</p>"
+          }
+        },
+        "block_3": {
+          "type": "question",
+          "settings": {
+            "question": "How can I contact you?",
+            "answer": "<p>Use our contact page to send a question to our team.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "rounded_products": {
+      "type": "product-edit",
+      "settings": {
+        "heading": "The makeup edit",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "concern_finder": {
+      "type": "concern-finder",
+      "settings": {
+        "eyebrow": "Start with how skin feels",
+        "heading": "Shop by concern.",
+        "image_radius": 28,
+        "padding_top": 36,
+        "padding_bottom": 20,
+        "padding_mobile_top": 24,
+        "padding_mobile_bottom": 12,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "dryness": {
+          "type": "concern",
+          "settings": {
+            "title": "Dryness",
+            "heading": "Comfort for skin that feels tight.",
+            "text": "<p>A softer place to start when skin wants moisture, not a long routine.</p>",
+            "button": "Shop dryness"
+          }
+        },
+        "dullness": {
+          "type": "concern",
+          "settings": {
+            "title": "Dullness",
+            "heading": "A fresher, more awake look.",
+            "text": "<p>Light, everyday care for skin that wants to look a little more alive.</p>",
+            "button": "Shop radiance"
+          }
+        },
+        "tone": {
+          "type": "concern",
+          "settings": {
+            "title": "Uneven tone",
+            "heading": "A more even-looking complexion.",
+            "text": "<p>Gentle color care for the days you want skin to look smoother and clearer.</p>",
+            "button": "Shop tone"
+          }
+        },
+        "sensitivity": {
+          "type": "concern",
+          "settings": {
+            "title": "Sensitivity",
+            "heading": "A gentler daily ritual.",
+            "text": "<p>Simple formulas for skin that prefers fewer steps and a calmer feel.</p>",
+            "button": "Shop gentle care"
+          }
+        }
+      },
+      "block_order": ["dryness", "dullness", "tone", "sensitivity"]
+    },
+    "ingredient_lab": {
+      "type": "ingredient-lab",
+      "settings": {
+        "eyebrow": "In plain words",
+        "heading": "Meet the ingredients.",
+        "section_gap": 12,
+        "padding_top": 20,
+        "padding_bottom": 50,
+        "padding_mobile_top": 12,
+        "padding_mobile_bottom": 30,
+        "section_color_scheme": "scheme-2"
+      },
+      "blocks": {
+        "hyaluronic": {
+          "type": "ingredient",
+          "settings": {
+            "title": "Hyaluronic acid",
+            "note": "Helps skin feel cushioned.",
+            "text": "<p>A water-loving ingredient people look for when skin feels dry or tight.</p>",
+            "button": "Shop hydration"
+          }
+        },
+        "niacinamide": {
+          "type": "ingredient",
+          "settings": {
+            "title": "Niacinamide",
+            "note": "A familiar smoothing active.",
+            "text": "<p>Often chosen for a more even look and a comfortable daily routine.</p>",
+            "button": "Shop niacinamide"
+          }
+        },
+        "vitamin_c": {
+          "type": "ingredient",
+          "settings": {
+            "title": "Vitamin C",
+            "note": "A bright daytime favorite.",
+            "text": "<p>A well-known antioxidant for mornings when skin looks a little tired.</p>",
+            "button": "Shop vitamin C"
+          }
+        },
+        "peptides": {
+          "type": "ingredient",
+          "settings": {
+            "title": "Peptides",
+            "note": "Soft support for a firmer look.",
+            "text": "<p>A quiet ingredient for people building a longer-term ritual.</p>",
+            "button": "Shop peptides"
+          }
+        },
+        "ceramides": {
+          "type": "ingredient",
+          "settings": {
+            "title": "Ceramides",
+            "note": "Comfort for the skin barrier.",
+            "text": "<p>Often used when skin wants to feel calmer and less easily unsettled.</p>",
+            "button": "Shop ceramides"
+          }
+        }
+      },
+      "block_order": ["hyaluronic", "niacinamide", "vitamin_c", "peptides", "ceramides"]
+    }
+  },
+  "order": [
+    "section_1",
+    "concern_finder",
+    "section_2",
+    "ingredient_lab",
+    "rounded_products",
+    "section_3",
+    "section_4",
+    "section_5",
+    "section_6",
+    "section_7",
+    "section_8",
+    "section_9",
+    "section_10",
+    "section_11",
+    "section_12",
+    "section_13",
+    "section_14",
+    "section_15",
+    "section_16",
+    "section_17",
+    "section_18"
+  ]
+}

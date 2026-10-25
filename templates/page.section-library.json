@@ -1,0 +1,501 @@
+{
+  "sections": {
+    "section_1": {
+      "type": "slideshow",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A new perspective.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "A moment for you",
+            "heading": "Your ritual starts here.",
+            "text": "<p>Discover your next daily ritual.</p>",
+            "button": "Explore the edit"
+          }
+        },
+        "block_2": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "A moment for you",
+            "heading": "A softer kind of glow.",
+            "text": "<p>Discover your next daily ritual.</p>",
+            "button": "Explore the edit"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2"
+      ]
+    },
+    "section_2": {
+      "type": "category-showcase",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Beauty for every moment.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "category",
+          "settings": {
+            "title": "Morning rituals",
+            "heading": "Start your day in Bloome.",
+            "text": "<p>A curated collection for your everyday ritual.</p>",
+            "button": "Shop this edit"
+          }
+        },
+        "block_2": {
+          "type": "category",
+          "settings": {
+            "title": "Evening essentials",
+            "heading": "Make space for your reset.",
+            "text": "<p>A curated collection for your everyday ritual.</p>",
+            "button": "Shop this edit"
+          }
+        },
+        "block_3": {
+          "type": "category",
+          "settings": {
+            "title": "Weekend colour",
+            "heading": "Follow your mood.",
+            "text": "<p>A curated collection for your everyday ritual.</p>",
+            "button": "Shop this edit"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_3": {
+      "type": "promo-grid",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Something for every shelf.",
+        "columns": 3,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "tile",
+          "settings": {
+            "title": "The skincare edit",
+            "text": "<p>A curated edit of everyday essentials.</p>",
+            "button": "Explore"
+          }
+        },
+        "block_2": {
+          "type": "tile",
+          "settings": {
+            "title": "A little colour",
+            "text": "<p>A curated edit of everyday essentials.</p>",
+            "button": "Explore"
+          }
+        },
+        "block_3": {
+          "type": "tile",
+          "settings": {
+            "title": "Gifts, thoughtfully chosen",
+            "text": "<p>A curated edit of everyday essentials.</p>",
+            "button": "Explore"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_4": {
+      "type": "countdown-collection",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "An edit worth making time for.",
+        "title": "Your next daily favourite.",
+        "text": "<p>Discover the latest edit of everyday essentials.</p>",
+        "expired": "Explore the latest collection.",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_5": {
+      "type": "store-story",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A little more about us.",
+        "title": "Made for the moments that are yours.",
+        "text": "<p>Thoughtful details, beautiful textures and room for your own kind of beauty. Explore the story behind Bloome.</p>",
+        "button": "Explore our world",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "fact",
+          "settings": {
+            "value": "Your skin",
+            "title": "Your ritual"
+          }
+        },
+        "block_2": {
+          "type": "fact",
+          "settings": {
+            "value": "Your pace",
+            "title": "Your everyday"
+          }
+        },
+        "block_3": {
+          "type": "fact",
+          "settings": {
+            "value": "Your glow",
+            "title": "Your kind of beautiful"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_6": {
+      "type": "image-benefits",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "The details behind your daily ritual.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Beautiful textures",
+            "text": "<p>Discover a detail that makes your everyday ritual feel special.</p>"
+          }
+        },
+        "block_2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Your favourite finish",
+            "text": "<p>Discover a detail that makes your everyday ritual feel special.</p>"
+          }
+        },
+        "block_3": {
+          "type": "benefit",
+          "settings": {
+            "title": "A moment of calm",
+            "text": "<p>Discover a detail that makes your everyday ritual feel special.</p>"
+          }
+        },
+        "block_4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Room to be you",
+            "text": "<p>Discover a detail that makes your everyday ritual feel special.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_7": {
+      "type": "bundle-builder",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Your ritual. Your own combination.",
+        "text": "<p>Choose the essentials that belong in your daily ritual.</p>",
+        "maximum": 4,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "product",
+          "settings": {
+            "title": "Your base"
+          }
+        },
+        "block_2": {
+          "type": "product",
+          "settings": {
+            "title": "Your daily dew"
+          }
+        },
+        "block_3": {
+          "type": "product",
+          "settings": {
+            "title": "Your colour"
+          }
+        },
+        "block_4": {
+          "type": "product",
+          "settings": {
+            "title": "Your finishing touch"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_8": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A little moment, just for you.",
+        "title": "Beauty that feels like you.",
+        "text": "<p>Make your daily routine a ritual you look forward to. Explore our world, one beautiful texture at a time.</p>",
+        "button": "Discover more",
+        "layout": "left",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_9": {
+      "type": "image-banner",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "The new-season edit.",
+        "title": "More room for radiance.",
+        "text": "<p>Beautiful textures. Favourite rituals. A new perspective.</p>",
+        "button": "Explore the collection",
+        "overlay": 40,
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_10": {
+      "type": "image-gallery",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A world of little discoveries.",
+        "columns": 3,
+        "layout": "editorial",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "image",
+          "settings": {
+            "caption": "Soft starts"
+          }
+        },
+        "block_2": {
+          "type": "image",
+          "settings": {
+            "caption": "A daily favourite"
+          }
+        },
+        "block_3": {
+          "type": "image",
+          "settings": {
+            "caption": "Your finishing touch"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_11": {
+      "type": "video-banner",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A moment in motion.",
+        "text": "<p>Discover the little details behind your everyday ritual.</p>",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_12": {
+      "type": "logo-list",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "In good company.",
+        "columns": 4,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "logo",
+          "settings": {
+            "title": "Your brand here"
+          }
+        },
+        "block_2": {
+          "type": "logo",
+          "settings": {
+            "title": "Your partner here"
+          }
+        },
+        "block_3": {
+          "type": "logo",
+          "settings": {
+            "title": "Your publication here"
+          }
+        },
+        "block_4": {
+          "type": "logo",
+          "settings": {
+            "title": "Your community here"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ]
+    },
+    "section_13": {
+      "type": "testimonials",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Your rituals. Your stories.",
+        "columns": 3,
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "review",
+          "settings": {
+            "quote": "A space for the moments your community shares.",
+            "author": "Your community"
+          }
+        },
+        "block_2": {
+          "type": "review",
+          "settings": {
+            "quote": "Let your customers tell their own beauty stories.",
+            "author": "Your community"
+          }
+        },
+        "block_3": {
+          "type": "review",
+          "settings": {
+            "quote": "Every ritual has a story. Share yours.",
+            "author": "Your community"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_14": {
+      "type": "comparison-table",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Find your favourite finish.",
+        "feature_label": "The details",
+        "first_label": "The daily ritual",
+        "second_label": "The evening ritual",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "row",
+          "settings": {
+            "title": "Texture",
+            "first": "Lightweight",
+            "second": "Rich"
+          }
+        },
+        "block_2": {
+          "type": "row",
+          "settings": {
+            "title": "Finish",
+            "first": "Soft",
+            "second": "Soft"
+          }
+        },
+        "block_3": {
+          "type": "row",
+          "settings": {
+            "title": "Your moment",
+            "first": "Morning",
+            "second": "Evening"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    },
+    "section_15": {
+      "type": "rich-text",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Beauty, on your terms.",
+        "text": "<p>There is no one way to be you. Make room for the small rituals and the little discoveries that brighten your everyday.</p>",
+        "button": "Explore our world",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_16": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A little good in your inbox.",
+        "text": "<p>New discoveries, beauty notes and a little inspiration for your day.</p>",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_17": {
+      "type": "contact-form",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "We would love to hear from you.",
+        "section_color_scheme": "scheme-1"
+      }
+    },
+    "section_18": {
+      "type": "countdown-banner",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "Something good is coming.",
+        "title": "Your next favourite, soon.",
+        "text": "<p>A new chapter in your daily ritual.</p>",
+        "expired": "Discover what is new.",
+        "button": "Explore the edit",
+        "section_color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "section_1",
+    "section_2",
+    "section_3",
+    "section_4",
+    "section_5",
+    "section_6",
+    "section_7",
+    "section_8",
+    "section_9",
+    "section_10",
+    "section_11",
+    "section_12",
+    "section_13",
+    "section_14",
+    "section_15",
+    "section_16",
+    "section_17",
+    "section_18"
+  ]
+}

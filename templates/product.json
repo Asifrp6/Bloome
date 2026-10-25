@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "settings": {
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "ingredients": {
+          "type": "information",
+          "settings": {
+            "heading": "Ingredients"
+          }
+        },
+        "usage": {
+          "type": "information",
+          "settings": {
+            "heading": "How to use"
+          }
+        },
+        "shipping": {
+          "type": "information",
+          "settings": {
+            "heading": "Shipping and returns"
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "sku": {
+          "type": "sku",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "sku",
+        "buy_buttons",
+        "description",
+        "ingredients",
+        "usage",
+        "shipping"
+      ]
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "section_color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommendations"
+  ]
+}

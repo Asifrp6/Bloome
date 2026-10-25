@@ -1,0 +1,28 @@
+{
+  "type": "footer",
+  "name": "t:general.footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "menu": "",
+        "show_payment_icons": true
+      }
+    },
+    "promotion": {
+      "type": "promotion-panel",
+      "settings": {
+        "auto": false
+      }
+    },
+    "quick_add": {
+      "type": "quick-add",
+      "settings": {}
+    }
+  },
+  "order": [
+    "footer",
+    "promotion",
+    "quick_add"
+  ]
+}

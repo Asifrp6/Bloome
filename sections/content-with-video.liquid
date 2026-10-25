@@ -1,0 +1,319 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section bl-component-content-with-video">
+  {% render 'library-heading', eyebrow:section.settings.eyebrow, heading:section.settings.heading %}
+  <bloome-product-preview class="bl-split">
+    <div class="bl-copy">
+      <div class="bl-rte">{{ section.settings.text }}</div>
+      <div class="bl-mini-products">
+        {% for block in section.blocks %}
+          {% assign preview_image = block.settings.image | default:block.settings.product.featured_image %}
+          {% assign preview_title = block.settings.product.title | default:block.settings.title %}
+          {% if section.settings.enable_product_preview %}
+            <button type="button" class="bl-product-selector" data-preview-target="ProductPreview-{{ section.id }}-{{ block.id }}" aria-controls="ProductPreview-{{ section.id }}-{{ block.id }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" {{ block.shopify_attributes }}>
+              {% render 'library-media', image:preview_image, index:forloop.index %}<span>{{ preview_title | escape }}</span>
+            </button>
+          {% else %}
+            <a href="{{ block.settings.product.url | default:routes.all_products_collection_url }}" {{ block.shopify_attributes }}>{% render 'library-media', image:preview_image, index:forloop.index %}<span>{{ preview_title | escape }}</span></a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="bl-content-video" aria-live="polite">
+      {% if section.settings.enable_product_preview %}
+        {% for block in section.blocks %}
+          {% assign preview_image = block.settings.image | default:block.settings.product.featured_image %}
+          {% assign preview_title = block.settings.product.title | default:block.settings.title %}
+          <div id="ProductPreview-{{ section.id }}-{{ block.id }}" class="bl-product-preview-panel" data-preview-panel {% unless forloop.first %}hidden{% endunless %}>
+            {% if block.settings.product != blank %}<a class="bl-product-preview-link" href="{{ block.settings.product.url }}" aria-label="{{ 'product_preview.open' | t: product:preview_title | escape }}">{% render 'library-media', image:preview_image, index:forloop.index %}<span class="visually-hidden">{{ preview_title | escape }}</span></a>
+            {% else %}{% render 'library-media', image:preview_image, index:forloop.index %}{% endif %}
+          </div>
+        {% else %}{% render 'library-media', image:section.settings.image %}{% endfor %}
+      {% elsif section.settings.video != blank %}
+        {{ section.settings.video | video_tag:controls:true,preload:'none',image_size:'1200x',playsinline:true }}
+      {% else %}{% render 'library-media', image:section.settings.image %}{% endif %}
+    </div>
+  </bloome-product-preview>
+</div>
+{% stylesheet %}
+  .bl-mini-products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:25px}
+  .bl-mini-products .bl-media{aspect-ratio:1}.bl-mini-products .beauty-object{scale:.35}.bl-mini-products span{font-size:10px;display:block;margin-top:10px}
+  .bl-product-selector{display:block;width:100%;min-width:0;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}.bl-product-selector .bl-media{outline:2px solid transparent;outline-offset:-2px}.bl-product-selector[aria-pressed=true] .bl-media{outline-color:var(--color-accent)}.bl-product-selector:hover .bl-media{filter:brightness(.97)}
+  .bl-content-video{min-width:0}.bl-content-video>video{width:100%;aspect-ratio:1;object-fit:cover}.bl-product-preview-link{display:block}.bl-product-preview-panel>.bl-media,.bl-product-preview-link>.bl-media{aspect-ratio:1;grid-template-rows:minmax(0,1fr)}.bl-product-preview-panel:not([hidden]){animation:bloome-product-preview-enter .2s ease}
+  @keyframes bloome-product-preview-enter{from{opacity:.25}to{opacity:1}}
+  @media(prefers-reduced-motion:reduce){.bl-product-preview-panel:not([hidden]){animation:none}}
+{% endstylesheet %}
+{% javascript %}
+class BloomeProductPreview extends HTMLElement{
+  connectedCallback(){if(this.ready)return;this.ready=true;this.addEventListener('click',event=>{const selector=event.target.closest('[data-preview-target]');if(selector&&this.contains(selector))this.select(selector);});this.addEventListener('keydown',event=>{const selector=event.target.closest('[data-preview-target]');if(!selector)return;const selectors=[...this.querySelectorAll('[data-preview-target]')];let index=selectors.indexOf(selector);if(event.key==='ArrowRight')index=(index+1)%selectors.length;else if(event.key==='ArrowLeft')index=(index-1+selectors.length)%selectors.length;else if(event.key==='Home')index=0;else if(event.key==='End')index=selectors.length-1;else return;event.preventDefault();this.select(selectors[index]);selectors[index].focus();});this.addEventListener('shopify:block:select',event=>{const selector=event.target.closest('[data-preview-target]');if(selector)this.select(selector);});}
+  select(selector){const panel=this.querySelector('[id="'+selector.dataset.previewTarget+'"]');if(!panel)return;this.querySelectorAll('[data-preview-target]').forEach(node=>node.setAttribute('aria-pressed',String(node===selector)));this.querySelectorAll('[data-preview-panel]').forEach(node=>node.hidden=node!==panel);}
+}
+if(!customElements.get('bloome-product-preview'))customElements.define('bloome-product-preview',BloomeProductPreview);
+{% endjavascript %}
+{% schema %}
+{
+  "name": "t:library.content_with_video.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_product_preview",
+      "label": "t:product_preview.enabled",
+      "info": "t:product_preview.info",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.content_with_video.eyebrow",
+      "default": "The Bloome edit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.content_with_video.heading",
+      "default": "Made for your daily glow."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:library.content_with_video.text",
+      "default": "<p>Discover the textures and little details behind your everyday essentials.</p>"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:library.content_with_video.video"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:library.content_with_video.image"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "t:editor.section_gap",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:library.content_with_video.block_0",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:library.content_with_video.b0_product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:library.content_with_video.b0_image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:library.content_with_video.b0_title",
+          "default": "A daily favourite"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:library.content_with_video.name",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "title": "Your base"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Your colour"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Your finish"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,278 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section bl-component-scrolling-text">
+  {% render 'library-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading %}
+  <div class="bl-ticker" style="--ticker-speed:{{ section.settings.speed }}s">
+    <div class="bl-ticker-track">
+      {% for block in section.blocks -%}
+        <span {{ block.shopify_attributes }}>
+          {{- block.settings.text | escape }}
+          <span aria-hidden="true">&#10035;</span></span
+        >
+      {%- endfor %}
+    </div>
+    <div class="bl-ticker-track" aria-hidden="true">
+      {% for block in section.blocks -%}
+        <span>{{ block.settings.text | escape }} &#10035;</span>
+      {%- endfor %}
+    </div>
+  </div>
+</div>
+{% stylesheet %}
+
+  .bl-ticker {
+    display: flex;
+    overflow: hidden;
+    gap: 45px;
+    border-block: 1px solid var(--color-border);
+    padding: 22px 0;
+  }
+  .bl-ticker-track {
+    display: flex;
+    flex-shrink: 0;
+    gap: 45px;
+    min-width: 100%;
+    animation: bl-marquee var(--ticker-speed) linear infinite;
+  }
+  .bl-ticker-track > span {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    white-space: nowrap;
+  }
+  .bl-ticker-track span span {
+    margin-left: 30px;
+  }
+  .bl-ticker:hover .bl-ticker-track,
+  .bl-ticker:focus-within .bl-ticker-track {
+    animation-play-state: paused;
+  }
+  @keyframes bl-marquee {
+    to {
+      transform: translateX(calc(-100% - 45px));
+    }
+  }
+
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:library.scrolling_text.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.scrolling_text.eyebrow",
+      "default": "The Bloome edit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.scrolling_text.heading"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:library.scrolling_text.speed",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "default": 30,
+      "unit": "s"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:library.scrolling_text.block_0",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:library.scrolling_text.b0_text",
+          "default": "Beauty on your terms"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:library.scrolling_text.name",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "Your ritual, your rules"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "A little everyday luxury"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "Room to be you"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

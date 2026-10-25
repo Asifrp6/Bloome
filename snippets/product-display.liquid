@@ -1,0 +1,201 @@
+{% doc %}
+  Shared product media and editable product details for product and featured sections.
+  @param {product} product - Product to display
+  @param {section} section - Section containing detail blocks
+  @param {boolean} [featured] - Use a linked secondary heading
+{% enddoc %}
+{% assign current_variant = product.selected_or_first_available_variant %}
+<div class="beauty-product">
+  <div class="product-gallery product-gallery--{{ section.settings.media_layout }}">
+    {% for media in product.media %}
+      <div class="product-media" data-media-id="{{ media.id }}">
+        {% if media.media_type == 'image' %}
+          {% if forloop.first %}{{ media.preview_image | image_url:width:1600 | image_tag:widths:'400, 700, 1100, 1600',sizes:'(min-width:760px) 50vw, 100vw',loading:'eager',fetchpriority:'high' }}
+          {% else %}{{ media.preview_image | image_url:width:1200 | image_tag:widths:'400, 700, 1200',sizes:'(min-width:760px) 50vw, 100vw',loading:'lazy' }}{% endif %}
+        {% else %}{{ media | media_tag: image_size:'1000x', controls:true }}{% endif %}
+      </div>
+    {% else %}<div class="product-placeholder">{% render 'photo-fallback', index: 1 %}</div>{% endfor %}
+  </div>
+  <bloome-product class="product-details">
+    {% for block in section.blocks %}
+      <div class="product-block product-block--{{ block.type }}" {{ block.shopify_attributes }}>
+        {% case block.type %}
+          {% when '@app' %}{% render block %}
+          {% when 'vendor' %}<p class="eyebrow">{{ product.vendor | escape }}</p>
+          {% when 'title' %}{% if featured %}<h2><a href="{{ product.url }}">{{ product.title | escape }}</a></h2>{% else %}<h1>{{ product.title | escape }}</h1>{% endif %}
+          {% when 'price' %}<div class="product-price" data-product-price aria-live="polite">{% render 'price', item: current_variant %}</div>{% if cart.taxes_included %}<p class="bl-muted">{{ 'editor.taxes_included' | t }}</p>{% endif %}
+          {% when 'sku' %}<p class="bl-muted" data-sku>{{ 'editor.sku' | t }}: <span>{{ current_variant.sku | escape }}</span></p>
+          {% when 'buy_buttons' %}{% render 'product-form', product: product, section: section, current_variant: current_variant %}
+          {% when 'description' %}<div class="product-description bl-rte">{{ product.description }}</div>
+          {% when 'custom_liquid' %}{{ block.settings.custom_liquid }}
+          {% when 'information' %}{% if block.settings.text != blank %}<details class="product-information"><summary>{{ block.settings.heading | escape }}</summary><div class="bl-rte">{{ block.settings.text }}</div></details>{% elsif request.design_mode %}<p>{{ 'editor.configure_information' | t }}</p>{% endif %}
+        {% endcase %}
+      </div>
+    {% endfor %}
+  </bloome-product>
+</div>
+<script type="application/ld+json">{{ product | structured_data }}</script>
+{% stylesheet %}
+.beauty-product{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:start}.product-gallery{display:grid;gap:18px;min-width:0}.product-gallery--grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product-gallery--grid>.product-media:first-child{grid-column:1/-1}.product-media>img,.product-media>video,.product-media>iframe,.product-media>model-viewer{width:100%;height:auto;background:var(--color-surface)}.product-media>model-viewer{min-height:400px}.product-placeholder{min-height:450px;display:grid;overflow:hidden;background:var(--color-surface)}.product-placeholder img{width:100%;height:450px;object-fit:cover}.product-details{display:block;position:sticky;top:110px;min-width:0}.product-details h1,.product-details h2{font-size:48px;line-height:1.1}.product-price{margin:24px 0}.product-price .card-price{font-size:22px}.product-details form{display:grid;gap:12px}.product-details label{font-size:12px;margin-top:10px}.product-details input{width:90px}.product-details .button{margin-top:15px}.product-description{line-height:1.8;margin-top:30px}.product-description p+p{margin-top:15px}.product-information details{border-bottom:1px solid var(--color-border);padding:20px 0}.product-information summary{cursor:pointer;font-size:14px}.product-information details>div,.product-information details>p{padding-top:15px;line-height:1.8}@media(max-width:760px){.beauty-product{grid-template-columns:1fr;gap:30px}.product-details{position:static}.product-placeholder{min-height:330px}}
+{% endstylesheet %}
+{% javascript %}
+class BloomeProduct extends HTMLElement {
+  connectedCallback() {
+    if (this.ready) return;
+    this.ready = true;
+    this.select = this.querySelector('[data-variant]');
+    const giftToggle = this.querySelector('[data-gift-toggle]');
+    if (giftToggle) {
+      const email = this.querySelector('[data-gift-email]');
+      giftToggle.addEventListener('change', () => { email.required = giftToggle.checked; });
+      this.querySelector('[data-gift-offset]').value = new Date().getTimezoneOffset();
+    }
+    this.select?.addEventListener('change', () => this.update());
+    const selectors = this.querySelector('[data-option-selectors]');
+    this.optionSelectors = [...this.querySelectorAll('[data-product-option]')];
+    if (this.optionSelectors.length && this.select) {
+      selectors.hidden = false;
+      this.select.hidden = true;
+      this.querySelector('[data-variant-label]').hidden = true;
+      this.optionSelectors.forEach((select) => select.addEventListener('change', () => this.matchOptions()));
+    }
+    if (this.select?.selectedOptions[0]) this.renderPlans(this.select.selectedOptions[0]);
+  }
+
+  matchOptions() {
+    const values = this.optionSelectors.map((node) => node.value);
+    const match = [...this.select.options].find((option) => {
+      if (!option.dataset.options) return false;
+      try {
+        return JSON.stringify(JSON.parse(option.dataset.options)) === JSON.stringify(values);
+      } catch {
+        return false;
+      }
+    });
+    if (match) {
+      this.select.value = match.value;
+      this.select.dispatchEvent(new Event('change', { bubbles: true }));
+      return;
+    }
+    let placeholder = this.select.querySelector('[data-unavailable-option]');
+    if (!placeholder) {
+      placeholder = document.createElement('option');
+      placeholder.dataset.unavailableOption = 'true';
+      placeholder.value = '';
+      placeholder.dataset.available = 'false';
+      placeholder.hidden = true;
+      this.select.append(placeholder);
+    }
+    this.select.value = '';
+    this.update();
+  }
+
+  renderPlans(option) {
+    const field = this.querySelector('[data-selling-plans]');
+    if (!field || !option) return;
+    let plans = [];
+    try { plans = JSON.parse(option.dataset.plans || '[]'); } catch { plans = []; }
+    const previous = field.querySelector('input[name="selling_plan"]:checked')?.value || '';
+    const requires = field.dataset.requires === 'true';
+    const stillAvailable = plans.some((plan) => String(plan.id) === previous);
+    field.replaceChildren();
+    const legend = document.createElement('legend');
+    legend.textContent = field.dataset.label;
+    field.append(legend);
+    if (!requires) {
+      const oneTime = document.createElement('label');
+      const oneTimeInput = document.createElement('input');
+      oneTimeInput.type = 'radio';
+      oneTimeInput.name = 'selling_plan';
+      oneTimeInput.value = '';
+      oneTimeInput.checked = !stillAvailable;
+      oneTime.append(oneTimeInput, document.createTextNode(` ${field.dataset.oneTime}`));
+      field.append(oneTime);
+    }
+    plans.forEach((plan, index) => {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'selling_plan';
+      input.value = plan.id;
+      input.checked = String(plan.id) === previous || (requires && !stillAvailable && index === 0);
+      label.append(input, document.createTextNode(` ${plan.name} — ${plan.price}`));
+      field.append(label);
+    });
+    field.hidden = plans.length === 0;
+  }
+
+  disconnectedCallback() { this.pickupRequest?.abort(); }
+
+  update() {
+    const option = this.select.selectedOptions[0];
+    if (!option) return;
+    const button = this.querySelector('[data-product-submit]');
+    const missing = option.value === '';
+    const price = this.querySelector('[data-product-price]');
+    const fragment = document.createDocumentFragment();
+    if (missing) {
+      const current = document.createElement('span');
+      current.className = 'card-price';
+      current.textContent = button?.dataset.unavailable || '';
+      fragment.append(current);
+    } else {
+      if (option.dataset.compare) {
+        const old = document.createElement('del');
+        old.textContent = option.dataset.compare;
+        old.className = 'card-price';
+        fragment.append(old, document.createTextNode(' '));
+      }
+      const current = document.createElement('span');
+      current.className = 'card-price';
+      current.textContent = option.dataset.price || '';
+      fragment.append(current);
+      if (option.dataset.unit) {
+        const unit = document.createElement('span');
+        unit.className = 'unit-price';
+        unit.textContent = option.dataset.unit;
+        fragment.append(unit);
+      }
+    }
+    if (price) price.replaceChildren(fragment);
+    const sku = this.querySelector('[data-sku] span');
+    if (sku) sku.textContent = option.dataset.sku || '';
+    if (button) {
+      button.disabled = missing || option.dataset.available === 'false';
+      button.textContent = missing ? button.dataset.unavailable : (button.disabled ? button.dataset.sold : button.dataset.available);
+    }
+    const payment = this.querySelector('[data-payment]');
+    if (payment) payment.hidden = Boolean(button?.disabled);
+    this.renderPlans(option);
+    if (missing) {
+      this.pickupRequest?.abort();
+      this.querySelector('[data-pickup]')?.replaceChildren();
+      return;
+    }
+    this.pickupRequest?.abort();
+    const pickup = this.querySelector('[data-pickup]');
+    if (pickup) {
+      pickup.replaceChildren();
+      this.pickupRequest = new AbortController();
+      const root = pickup.dataset.root.endsWith('/') ? pickup.dataset.root : `${pickup.dataset.root}/`;
+      fetch(`${root}variants/${encodeURIComponent(option.value)}/?section_id=pickup-availability`, { signal: this.pickupRequest.signal })
+        .then((response) => { if (!response.ok) throw new Error('pickup'); return response.text(); })
+        .then((text) => {
+          const content = new DOMParser().parseFromString(text, 'text/html').querySelector('[data-pickup-response]');
+          if (content && this.select.value === option.value) pickup.replaceChildren(...content.childNodes);
+        })
+        .catch(() => {});
+    }
+    if (option.dataset.media) {
+      const media = this.closest('.beauty-product')?.querySelector(`[data-media-id="${option.dataset.media}"]`);
+      if (media) media.parentElement.prepend(media);
+    }
+    if (!window.Shopify?.designMode) {
+      const url = new URL(location.href);
+      url.searchParams.set('variant', option.value);
+      history.replaceState({}, '', url);
+    }
+  }
+}
+if (!customElements.get('bloome-product')) customElements.define('bloome-product', BloomeProduct);
+{% endjavascript %}

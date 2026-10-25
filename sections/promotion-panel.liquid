@@ -1,0 +1,167 @@
+<bloome-promotion class="promotion-panel" data-auto="{{ section.settings.auto }}" data-key="{{ section.id }}"
+  ><button class="promotion-launch" type="button" data-open>{{ section.settings.launcher | escape }}</button>
+  <dialog aria-labelledby="PromotionTitle-{{ section.id }}">
+    <button class="promotion-close" type="button" data-close aria-label="{{ 'library.close' | t }}">
+      &#10005;
+    </button>
+    <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h2 id="PromotionTitle-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+    <div class="promotion-text">{{ section.settings.text }}</div>
+    {% assign newsletter_form_id = 'NewsletterForm-' | append: section.id %}
+{% form 'customer', id: newsletter_form_id %}
+      <input type="hidden" name="contact[tags]" value="newsletter"
+      ><label for="PromotionEmail-{{ section.id }}">{{ 'bloome.email' | t }}</label
+      ><input
+        id="PromotionEmail-{{ section.id }}"
+        type="email"
+        name="contact[email]"
+        autocomplete="email"
+        required
+
+      ><button class="button" type="submit">{{ 'bloome.subscribe' | t }}</button>
+      {%- if form.posted_successfully? %}
+        <p role="status">{{ 'bloome.subscribed' | t }}</p>
+      {% endif -%}
+      {{- form.errors | default_errors }}
+    {% endform %}
+    {% for block in section.blocks %}
+      <div class="promotion-code" {{ block.shopify_attributes }}>
+        <strong>{{ block.settings.code | escape }}</strong>
+        <p>{{ block.settings.description | escape }}</p>
+      </div>
+    {% endfor %}
+  </dialog>
+</bloome-promotion>
+{% stylesheet %}
+
+  .promotion-launch {
+    position: fixed;
+    right: 0;
+    top: 55%;
+    writing-mode: vertical-rl;
+    background: #49323f;
+    color: #fff8eb;
+    border: 1px solid #fff8eb;
+    padding: 20px 12px;
+    z-index: 20;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+  .promotion-panel dialog {
+    margin: auto;
+    width: min(500px, calc(100% - 40px));
+    max-height: 85svh;
+    overflow: auto;
+    border: 0;
+    padding: 45px;
+    background: #f6eee5;
+    color:var(--color-foreground);
+  }
+  .promotion-panel dialog::backdrop {
+    background: #25132088;
+  }
+  .promotion-panel h2 {
+    font-size: 37px;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+  .promotion-text {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .promotion-panel form {
+    display: grid;
+    gap: 12px;
+    margin-top: 25px;
+  }
+  .promotion-panel label {
+    font-size: 12px;
+  }
+  .promotion-close {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    background: transparent;
+    border: 0;
+    width: 44px;
+    height: 44px;
+    color: inherit;
+  }
+  .promotion-code {
+    margin-top: 25px;
+    padding: 15px;
+    border: 1px dashed #b89fab;
+  }
+  .promotion-code p {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+{% endstylesheet %}
+{% javascript %}class BloomePromotion extends HTMLElement{connectedCallback(){if(this.ready)return;this.ready=true;const dialog=this.querySelector('dialog');const open=()=>{if(!dialog.open)dialog.showModal();};this.querySelector('[data-open]').addEventListener('click',open);this.querySelector('[data-close]').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});this.closest('.shopify-section')?.addEventListener('shopify:section:select',open);if(this.dataset.auto==='true'){try{const key='bloome-promotion-'+this.dataset.key;if(!sessionStorage.getItem(key)){sessionStorage.setItem(key,'1');this.timeout=setTimeout(open,8000);}}catch{}}}disconnectedCallback(){clearTimeout(this.timeout);this.querySelector('dialog')?.close();}}if(!customElements.get('bloome-promotion'))customElements.define('bloome-promotion',BloomePromotion);{% endjavascript %}
+{% schema %}
+{
+  "name": "t:library.promotion.name",
+  "limit": 1,
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "launcher",
+      "label": "t:library.promotion.launcher",
+      "default": "The Bloome club"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.promotion.eyebrow",
+      "default": "A little inspiration"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.promotion.heading",
+      "default": "Your next discovery awaits."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:library.promotion.text",
+      "default": "<p>Sign up for beauty notes and the latest from our world.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto",
+      "label": "t:library.promotion.auto",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "t:library.promotion.offer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "code",
+          "label": "t:library.promotion.code"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "t:library.promotion.description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:library.promotion.name"
+    }
+  ]
+}
+{% endschema %}

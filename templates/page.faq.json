@@ -1,0 +1,43 @@
+{
+  "sections": {
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "A little more clarity.",
+        "section_color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "block_1": {
+          "type": "question",
+          "settings": {
+            "question": "Where should I start?",
+            "answer": "<p>Explore the skincare and makeup edits to find your daily essentials.</p>"
+          }
+        },
+        "block_2": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I find product details?",
+            "answer": "<p>Each product page includes its description and available options.</p>"
+          }
+        },
+        "block_3": {
+          "type": "question",
+          "settings": {
+            "question": "How can I contact you?",
+            "answer": "<p>Use our contact page to send a question to our team.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3"
+      ]
+    }
+  },
+  "order": [
+    "faq"
+  ]
+}

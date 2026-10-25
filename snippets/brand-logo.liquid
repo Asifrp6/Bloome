@@ -1,0 +1,8 @@
+{% doc %}
+  Renders the merchant's logo, or the configured Bloome wordmark.
+  @param {string} [brand] - Optional section brand name override.
+  @param {image} [image] - Optional section logo override.
+{% enddoc %}
+{% assign brand_label = brand | default: settings.brand_name | default: 'Bloome' %}
+{% assign brand_image = image | default: settings.logo %}
+{% if brand_image != blank %}{{ brand_image | image_url: width:600 | image_tag: widths:'120, 240, 400, 600', sizes:'(max-width:760px) 40vw, 200px', loading:'eager', alt:brand_label }}{% else %}{{ brand_label | escape }}<span aria-hidden="true">&#10035;</span>{% endif %}

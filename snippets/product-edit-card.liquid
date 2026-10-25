@@ -1,0 +1,48 @@
+{% doc %}
+  Renders a rounded product card with native swatches and purchase actions.
+  @param {product} [item] - Product to display
+  @param {number} index - Placeholder index
+  @param {section} section - Owning product edit section
+{% enddoc %}
+{% assign selected_variant = item.selected_or_first_available_variant %}
+{% assign item_url = selected_variant.url | default:item.url | default:routes.all_products_collection_url %}
+<bloome-edit-card class="edit-card">
+  <div class="edit-card-media">
+    <a href="{{ item_url }}" data-card-link>
+      {% if item.featured_image %}{{ item.featured_image | image_url:width:800 | image_tag:widths:'250, 400, 600, 800',sizes:'(min-width:1000px) 25vw, 50vw',loading:'lazy',class:'edit-card-image' }}
+      {% else %}{% render 'photo-fallback', index: index %}{% endif %}
+    </a>
+    {% if item != blank %}{% if item.available == false %}<span class="edit-badge">{{ 'bloome.sold' | t }}</span>{% elsif selected_variant.compare_at_price > selected_variant.price %}<span class="edit-badge edit-badge--sale">{{ 'editor.sale' | t }}</span>{% elsif section.settings.new_tag != blank %}{% if item.tags contains section.settings.new_tag %}<span class="edit-badge">{{ 'product_edit.new' | t }}</span>{% endif %}{% endif %}{% endif %}
+  </div>
+  <div class="edit-card-body">
+    <div class="edit-card-information">
+      <h3><a href="{{ item_url }}" data-card-link>{% if item != blank %}{{ item.title | escape }}{% else %}{{ 'product_edit.placeholder' | t }} {{ index }}{% endif %}</a></h3>
+      {% if item != blank %}<div class="edit-card-price" data-edit-price>{% if item.price_varies %}<span>{{ 'bloome.from' | t }}</span> {% endif %}{% render 'price', item:selected_variant %}</div>{% else %}<p class="edit-card-placeholder">{{ 'product_edit.choose_products' | t }}</p>{% endif %}
+    </div>
+    {% if item != blank %}
+      {% if item.has_only_default_variant %}
+        {% assign edit_form_id = 'EditProduct-' | append:section.id | append:'-' | append:item.id %}
+        {% form 'product', item, id:edit_form_id, class:'edit-card-form' %}<input type="hidden" name="id" value="{{ selected_variant.id }}"><button class="edit-card-action" type="submit" aria-label="{{ 'product_edit.add_label' | t: product:item.title | escape }}" {% unless selected_variant.available %}disabled{% endunless %}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2M12 11v6m-3-3h6"/></svg></button>{{ form.errors | default_errors }}{% endform %}
+      {% else %}<a class="edit-card-action" href="{{ item_url }}" data-quick-product="{{ item_url }}" data-edit-quick aria-label="{{ 'product_edit.view_label' | t: product:item.title | escape }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></a>{% endif %}
+    {% endif %}
+  </div>
+  {% if section.settings.show_swatches %}{% if item != blank %}
+    {% assign swatch_option = nil %}
+    {% for option in item.options_with_values %}{% assign option_name = option.name | downcase %}{% if option_name == 'color' or option_name == 'colour' or option_name == 'shade' %}{% assign swatch_option = option %}{% break %}{% endif %}{% for value in option.values %}{% if value.swatch != blank %}{% assign swatch_option = option %}{% break %}{% endif %}{% endfor %}{% if swatch_option != blank %}{% break %}{% endif %}{% endfor %}
+    {% if swatch_option != blank %}<div class="edit-card-swatches" aria-label="{{ swatch_option.name | escape }}">
+      {% for value in swatch_option.values limit:6 %}{% assign swatch_variant = value.variant %}{% assign swatch_url = swatch_variant.url | default:value.product_url | default:item.url %}
+        <a class="edit-swatch" href="{{ swatch_url }}" title="{{ value.name | default:value | escape }}" aria-label="{{ value.name | default:value | escape }}" {% if value.selected %}aria-current="true"{% endif %}
+          {% if swatch_variant != blank %}data-edit-swatch data-url="{{ swatch_url }}" data-image="{% if swatch_variant.featured_image %}{{ swatch_variant.featured_image | image_url:width:800 }}{% endif %}" data-price="{% if settings.show_currency_code %}{{ swatch_variant.price | money_with_currency | escape }}{% else %}{{ swatch_variant.price | money | escape }}{% endif %}" data-compare="{% if swatch_variant.compare_at_price > swatch_variant.price %}{% if settings.show_currency_code %}{{ swatch_variant.compare_at_price | money_with_currency | escape }}{% else %}{{ swatch_variant.compare_at_price | money | escape }}{% endif %}{% endif %}" data-unit="{% if swatch_variant.unit_price_measurement %}{{ swatch_variant.unit_price | unit_price_with_measurement:swatch_variant.unit_price_measurement | escape }}{% endif %}"{% endif %}>
+          {% if value.swatch.image %}{{ value.swatch.image | image_url:width:60 | image_tag:loading:'lazy',alt:'' }}{% elsif value.swatch.color %}<span style="--swatch-color:{{ value.swatch.color }}"></span>{% elsif swatch_variant.featured_image %}{{ swatch_variant.featured_image | image_url:width:60 | image_tag:loading:'lazy',alt:'' }}{% else %}<span class="edit-swatch-text">{{ value.name | default:value | slice:0,2 | escape }}</span>{% endif %}
+        </a>
+      {% endfor %}
+      {% if swatch_option.values.size > 6 %}<a class="edit-swatch-more" href="{{ item.url }}">+{{ swatch_option.values.size | minus:6 }}</a>{% endif %}
+    </div>{% endif %}
+  {% endif %}{% endif %}
+</bloome-edit-card>
+{% javascript %}
+class BloomeEditCard extends HTMLElement {
+  connectedCallback(){if(this.ready)return;this.ready=true;this.addEventListener('click',event=>{const swatch=event.target.closest('[data-edit-swatch]');if(!swatch||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();this.querySelectorAll('[data-edit-swatch]').forEach(node=>node.removeAttribute('aria-current'));swatch.setAttribute('aria-current','true');this.querySelectorAll('[data-card-link]').forEach(link=>link.href=swatch.dataset.url);const quick=this.querySelector('[data-edit-quick]');if(quick){quick.href=swatch.dataset.url;quick.dataset.quickProduct=swatch.dataset.url;}const image=this.querySelector('.edit-card-image');if(image&&swatch.dataset.image){image.removeAttribute('srcset');image.src=swatch.dataset.image;}const price=this.querySelector('[data-edit-price]');if(price){price.replaceChildren();if(swatch.dataset.compare){const old=document.createElement('del');old.textContent=swatch.dataset.compare;price.append(old);}const current=document.createElement('span');current.textContent=swatch.dataset.price;price.append(current);if(swatch.dataset.unit){const unit=document.createElement('span');unit.className='unit-price';unit.textContent=swatch.dataset.unit;price.append(unit);}}});}
+}
+if(!customElements.get('bloome-edit-card'))customElements.define('bloome-edit-card',BloomeEditCard);
+{% endjavascript %}

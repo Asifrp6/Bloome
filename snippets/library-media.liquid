@@ -1,0 +1,24 @@
+{% doc %}
+  Renders a merchant image, or a real photograph until one is chosen.
+
+  @param {image} [image] - Image selected in the editor.
+  @param {number} [index] - Chooses the stand-in photograph.
+  @param {string} [loading] - Image loading strategy.
+  @param {string} [priority] - Fetch priority for the image.
+{% enddoc %}
+{% assign media_loading = loading | default: 'lazy' %}
+{% assign media_priority = priority | default: 'auto' %}
+<div class="bl-media bl-media--{{ index | default: 1 }}">
+  {% if image != blank -%}
+    {{-
+      image
+      | image_url: width: 1600
+      | image_tag:
+        widths: '320, 640, 960, 1600',
+        sizes: '(min-width: 760px) 50vw, 100vw',
+        loading: media_loading, fetchpriority: media_priority
+    -}}
+  {%- else -%}
+    {%- render 'photo-fallback', index: index, loading: media_loading, priority: media_priority -%}
+  {%- endif %}
+</div>

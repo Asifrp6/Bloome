@@ -1,0 +1,7 @@
+<div data-quick-media>
+  {% for media in product.media %}
+    <div>{% if media.media_type == 'image' %}{{ media.preview_image | image_url: width: 900 | image_tag: loading: 'lazy' }}{% else %}{{ media | media_tag: image_size: '900x', controls: true }}{% endif %}</div>
+  {% endfor %}
+</div>
+{% stylesheet %}[data-quick-media]{display:grid;gap:16px}[data-quick-media] img,[data-quick-media] video,[data-quick-media] iframe,[data-quick-media] model-viewer{width:100%;height:auto}[data-quick-media] model-viewer{min-height:320px}{% endstylesheet %}
+{% schema %}{"name":"t:editor.quick_media","settings":[]}{% endschema %}

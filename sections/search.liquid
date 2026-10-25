@@ -1,0 +1,176 @@
+{% render 'section-settings', section: section %}<section class="bloome-search"><h1>{{ 'search.title' | t }}</h1><form action="{{ routes.search_url }}" method="get" role="search"><label class="visually-hidden" for="Search-{{ section.id }}">{{ 'editor.search_label' | t }}</label><input id="Search-{{ section.id }}" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}"><button class="button" type="submit">{{ 'search.submit' | t }}</button>{% assign predictive_id = 'Predictive-' | append: section.id %}{% render 'predictive-search', id: predictive_id %}</form>{% if search.performed %}{% render 'search-filters', section: section %}{% if search.results_count == 0 %}{% assign escaped_terms = search.terms | escape %}<p>{{ 'search.no_results_html' | t: terms:escaped_terms }}</p>{% else %}{% assign escaped_terms = search.terms | escape %}<p>{{ 'search.results_for_html' | t: terms:escaped_terms, count:search.results_count }}</p>{% paginate search.results by 16 %}<div class="beauty-product-grid">{% for result in search.results %}{% if result.object_type == 'product' %}{% render 'beauty-card',card_product:result,index:forloop.index %}{% else %}<article>{% if result.image != blank %}<a href="{{ result.url }}">{{ result.image | image_url:width:700 | image_tag:loading:'lazy' }}</a>{% endif %}<h2><a href="{{ result.url }}">{{ result.title | escape }}</a></h2><p>{{ result.content | strip_html | truncate:140 | escape }}</p></article>{% endif %}{% endfor %}</div><div class="collection-pagination">{{ paginate | default_pagination }}</div>{% endpaginate %}{% endif %}{% endif %}</section>{% stylesheet %}.bloome-search h1{font-size:46px;margin-bottom:25px}.bloome-search>form{display:flex;gap:12px;margin-bottom:30px;max-width:700px}.bloome-search input{flex:1;min-width:0}.bloome-search>p{margin-bottom:20px}.bloome-search h2{font-size:20px;margin:15px 0}@media(max-width:500px){.bloome-search>form{flex-direction:column}}{% endstylesheet %}{% schema %}
+{
+  "name": "t:general.search",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "t:editor.section_gap",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

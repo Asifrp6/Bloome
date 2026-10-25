@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "404",
+      "settings": {
+        "section_color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

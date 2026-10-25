@@ -1,0 +1,79 @@
+{% doc %}
+  Renders the native product purchase form.
+  @param {product} product - Product to purchase
+  @param {section} section - Owning section
+  @param {variant} current_variant - Selected variant
+{% enddoc %}
+{% assign product_form_id = 'ProductForm-' | append: section.id %}
+{% form 'product', product, id: product_form_id %}
+  {{ form.errors | default_errors }}
+  {{ form | payment_terms }}
+  {% unless product.has_only_default_variant %}
+    <div data-option-selectors hidden>
+      {% for product_option in product.options_with_values %}
+        <label for="Option-{{ section.id }}-{{ forloop.index }}">{{ product_option.name | escape }}</label>
+        <select id="Option-{{ section.id }}-{{ forloop.index }}" data-product-option>
+          {% render 'option-values', product_option: product_option, skip: 0 %}
+          {% render 'option-values', product_option: product_option, skip: 50 %}
+          {% render 'option-values', product_option: product_option, skip: 100 %}
+          {% render 'option-values', product_option: product_option, skip: 150 %}
+          {% render 'option-values', product_option: product_option, skip: 200 %}
+        </select>
+      {% endfor %}
+    </div>
+  {% endunless %}
+  <label data-variant-label for="Variant-{{ section.id }}">{{ 'bloome.variant' | t }}</label>
+  <select id="Variant-{{ section.id }}" name="id" data-variant required>
+    {% paginate product.variants by 250 %}
+      {% assign variant_offsets = '0,50,100,150,200' | split: ',' %}
+      {% for variant_offset in variant_offsets %}
+        {% assign variant_offset_number = variant_offset | plus: 0 %}
+        {% for variant in product.variants offset: variant_offset_number limit: 50 %}
+          {% render 'variant-option', variant: variant, current_variant: current_variant %}
+        {% endfor %}
+      {% endfor %}
+    {% endpaginate %}
+  </select>
+  {% if product.selling_plan_groups.size > 0 %}
+    <fieldset
+      class="selling-plans"
+      data-selling-plans
+      data-label="{{ 'bloome.purchase_options' | t | escape }}"
+      data-one-time="{{ 'bloome.one_time' | t | escape }}"
+      data-requires="{% if product.requires_selling_plan %}true{% else %}false{% endif %}"
+      {% if current_variant.selling_plan_allocations.size == 0 %}hidden{% endif %}
+    >
+      <legend>{{ 'bloome.purchase_options' | t }}</legend>
+      {% unless product.requires_selling_plan %}
+        <label><input type="radio" name="selling_plan" value="" {% if product.selected_selling_plan == blank %}checked{% endif %}> {{ 'bloome.one_time' | t }}</label>
+      {% endunless %}
+      {% for allocation in current_variant.selling_plan_allocations %}
+        {% liquid
+          assign plan_checked = false
+          if product.selected_selling_plan.id == allocation.selling_plan.id
+            assign plan_checked = true
+          endif
+          if product.requires_selling_plan and product.selected_selling_plan == blank and forloop.first
+            assign plan_checked = true
+          endif
+        %}
+        <label>
+          <input type="radio" name="selling_plan" value="{{ allocation.selling_plan.id }}" {% if plan_checked %}checked{% endif %}>
+          {{ allocation.selling_plan.name | escape }} — {{ allocation.price | money }}
+        </label>
+      {% endfor %}
+    </fieldset>
+  {% endif %}
+  <label for="Quantity-{{ section.id }}">{{ 'bloome.quantity' | t }}</label>
+  <input id="Quantity-{{ section.id }}" type="number" name="quantity" min="1" value="1" inputmode="numeric">
+  {% if product.gift_card? %}{% render 'gift-recipient', id: section.id %}{% endif %}
+  <button class="button" type="submit" data-product-submit data-available="{{ 'bloome.add' | t }}" data-sold="{{ 'bloome.sold' | t }}" data-unavailable="{{ 'bloome.unavailable' | t }}" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}{{ 'bloome.add' | t }}{% else %}{{ 'bloome.sold' | t }}{% endif %}</button>
+  {% if product.available %}{% if section.settings.show_dynamic_checkout %}<div data-payment>{{ form | payment_button }}</div>{% endif %}{% endif %}
+{% endform %}
+
+<div data-pickup data-root="{{ routes.root_url }}">{% render 'pickup-locations', variant: current_variant %}</div>
+{% stylesheet %}
+.selling-plans{display:grid;gap:8px;margin:16px 0;padding:0;border:0}
+.selling-plans legend{font-size:14px;margin-bottom:4px}
+.selling-plans label{display:flex;align-items:center;gap:8px}
+{% endstylesheet %}

@@ -1,0 +1,52 @@
+{% doc %}
+  Connects section layout and native color scheme controls to the storefront.
+  @param {section} section - The section whose editor controls are being applied.
+  @param {number} [default_heading] - Default desktop heading size.
+  @param {number} [default_mobile_heading] - Default mobile heading size.
+{% enddoc %}
+{% assign chosen_scheme = section.settings.section_color_scheme %}
+{% if chosen_scheme.settings == blank %}
+  {% assign chosen_scheme = settings.color_schemes[section.settings.section_color_scheme] %}
+{% endif %}
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% if chosen_scheme.settings != blank %}
+      --color-background:{{ chosen_scheme.settings.background }};
+      --color-foreground:{{ chosen_scheme.settings.text }};
+      --color-surface:{{ chosen_scheme.settings.surface }};
+      --color-accent:{{ chosen_scheme.settings.accent }};
+      --color-border:{{ chosen_scheme.settings.border }};
+      --button-background:{{ chosen_scheme.settings.button }};
+      --button-foreground:{{ chosen_scheme.settings.button_label }};
+    {% endif %}
+    background:{% if chosen_scheme.settings.background_gradient != blank %}{{ chosen_scheme.settings.background_gradient }}{% else %}var(--color-background){% endif %};
+    color:var(--color-foreground);
+    padding-block:{{ section.settings.padding_top | default: 0 }}px {{ section.settings.padding_bottom | default: 0 }}px;
+    --section-heading-size:{% if section.settings.custom_typography %}{{ section.settings.heading_size }}{% else %}{{ default_heading | default:46 }}{% endif %}px;
+    --section-body-size:{% if section.settings.custom_typography %}{{ section.settings.text_size }}px{% else %}var(--body-font-size,14px){% endif %};
+    --section-image-radius:{{ section.settings.image_radius | default: 0 }}px;
+    --section-alignment:{{ section.settings.text_alignment | default: 'left' }};
+    {% if section.settings.section_gap > 0 %}--grid-gap:{{ section.settings.section_gap }}px;{% endif %}
+    {% if section.settings.content_width == 'narrow' %}
+      --content-width:min(900px,calc(100% - var(--page-margin)*2));
+    {% elsif section.settings.content_width == 'full' %}
+      --content-width:100%;
+      --content-margin:0px;
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }} > :is(.bl-section,.beauty-products,.beauty-cart,.bloome-welcome){padding-block:0;margin-block:0}
+  #shopify-section-{{ section.id }} > .beauty-hero{margin-bottom:0}
+  #shopify-section-{{ section.id }} :is(.bl-heading,.section-heading,.hero-copy,.story-copy,.bl-copy,.bl-center,.beauty-cart>h1,.bloome-page>h1,.bloome-search>h1,.product-details h1){text-align:var(--section-alignment)}
+  #shopify-section-{{ section.id }} .bl-heading{width:100%;max-width:none}
+  #shopify-section-{{ section.id }} :is(.bl-heading h2,.bl-heading .eyebrow,.section-heading h2){max-width:none;overflow-wrap:normal;word-break:normal;hyphens:none;text-wrap:wrap}
+  #shopify-section-{{ section.id }} :is(.bl-heading h2,.section-heading h2,.hero-copy h1,.story-copy h2,.product-details h1,.beauty-cart h1,.bloome-page h1,.bloome-search h1){font-size:calc(var(--section-heading-size)*var(--heading-scale,1))}
+  #shopify-section-{{ section.id }} :is(.bl-rte,.bl-rte p,.hero-description,.story-copy>p:not(.eyebrow),.product-description){font-size:var(--section-body-size)}
+  #shopify-section-{{ section.id }} :is(.bl-media,.story-art,.hero-art,.product-media){border-radius:var(--section-image-radius)}
+  #shopify-section-{{ section.id }} .card-image{border-radius:max(var(--section-image-radius,0px),var(--card-radius,12px))}
+  #shopify-section-{{ section.id }} :is(.bl-grid,.bl-products,.bl-scroll,.bl-split,.beauty-product-grid,.beauty-product){gap:var(--grid-gap,20px)}
+  {% if section.settings.hide_desktop %}{% unless request.design_mode %}@media(min-width:761px){#shopify-section-{{ section.id }}{display:none}}{% endunless %}{% endif %}
+  @media(max-width:760px){
+    #shopify-section-{{ section.id }}{padding-block:{{ section.settings.padding_mobile_top | default: 0 }}px {{ section.settings.padding_mobile_bottom | default: 0 }}px;--section-heading-size:{% if section.settings.custom_typography %}{{ section.settings.heading_mobile_size }}{% else %}{{ default_mobile_heading | default:34 }}{% endif %}px}
+    {% if section.settings.hide_mobile %}{% unless request.design_mode %}#shopify-section-{{ section.id }}{display:none}{% endunless %}{% endif %}
+  }
+{% endstyle %}

@@ -1,0 +1,368 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section bl-component-shop-by-price" style="--price-card-background:{{ section.settings.card_background }};--price-card-foreground:{{ section.settings.card_foreground }};--price-card-radius:{{ section.settings.card_radius }}px">
+  {% render 'library-heading', eyebrow:section.settings.eyebrow, heading:section.settings.heading %}
+  <div class="bl-grid price-card-grid" style="--columns:{{ section.settings.columns }};--mobile-columns:{{ section.settings.columns_mobile }}">
+    {% for block in section.blocks %}
+      {% assign maximum = block.settings.maximum | default:30 | at_least:0 %}
+      {% assign currency_code = cart.currency.iso_code | default: shop.currency %}
+      {% assign minor_units = 100 %}
+      {% assign padded_currency = ' ' | append: currency_code | append: ' ' %}
+      {% if ' BIF CLP DJF GNF ISK JPY KMF KRW PYG RWF UGX VND VUV XAF XOF XPF ' contains padded_currency %}
+        {% assign minor_units = 1 %}
+      {% elsif ' BHD IQD JOD KWD LYD OMR TND ' contains padded_currency %}
+        {% assign minor_units = 1000 %}
+      {% endif %}
+      {% assign maximum_price = maximum | times: minor_units %}
+      {% assign collection_url = block.settings.collection.url | default:routes.all_products_collection_url %}
+      {% assign card_image = block.settings.image | default:block.settings.collection.featured_image %}
+      <article class="price-category-card" {{ block.shopify_attributes }}>
+        <a class="price-category-image" href="{{ collection_url }}?filter.v.price.lte={{ maximum | url_encode }}" aria-label="{{ block.settings.title | escape }} — {{ 'library.under_price' | t }} {{ maximum_price | money | escape }}">{% render 'library-media', image:card_image, index:forloop.index %}</a>
+        <div class="price-category-body">
+          <h3>{{ block.settings.title | default:block.settings.collection.title | escape }}</h3>
+          {% if block.settings.description != blank %}<p class="price-category-description">{{ block.settings.description | escape }}</p>{% endif %}
+          <div class="price-category-budget"><span>{{ 'library.under_price' | t }}</span><strong>{% if settings.show_currency_code %}{{ maximum_price | money_with_currency }}{% else %}{{ maximum_price | money_without_trailing_zeros }}{% endif %}</strong><span>{{ 'price_cards.only' | t }}</span></div>
+          <a class="price-category-button" href="{{ collection_url }}?filter.v.price.lte={{ maximum | url_encode }}">{% if block.settings.button != blank %}{{ block.settings.button | escape }}{% else %}{{ 'bloome.shop_now' | t }}{% endif %}<span class="visually-hidden"> — {{ block.settings.title | escape }}</span></a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</div>
+{% stylesheet %}
+  .price-card-grid{align-items:stretch}.price-category-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border-radius:var(--price-card-radius,20px);background:var(--price-card-background,#f2e0e5);color:var(--price-card-foreground,#762247)}
+  .price-category-image{display:block;overflow:hidden}.price-category-image .bl-media{aspect-ratio:16/9;border-radius:0!important;background:var(--price-card-background)}.price-category-image img{transition:transform .35s ease}.price-category-image:hover img{transform:scale(1.035)}.price-category-image .beauty-object{scale:.5}
+  .price-category-body{padding:24px clamp(18px,2.4vw,40px);text-align:center;display:flex;flex-direction:column;flex:1}.price-category-body h3{font-size:18px;font-weight:650;line-height:1.35;text-transform:uppercase;margin:0 0 7px;letter-spacing:.01em}.price-category-description{font-size:14px;line-height:1.6;margin-bottom:20px}
+  .price-category-budget{margin-top:auto;padding-top:14px;border-top:1px solid color-mix(in srgb,currentColor 25%,transparent);display:flex;align-items:center;justify-content:center;gap:clamp(10px,1.6vw,28px);flex-wrap:wrap}.price-category-budget>span{font-size:12px;text-transform:uppercase;letter-spacing:.13em}.price-category-budget strong{font-size:44px;font-weight:650;line-height:1.25;letter-spacing:-.03em}
+  .price-category-button{display:flex;justify-content:center;align-items:center;min-height:49px;border:1px solid currentColor;border-radius:999px;margin-top:20px;padding:12px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;transition:background .2s,color .2s}.price-category-button:hover{background:var(--price-card-foreground);color:var(--price-card-background)}
+  @media(max-width:1000px) and (min-width:761px){.price-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:760px){.price-card-grid{grid-template-columns:repeat(var(--mobile-columns,1),minmax(0,1fr))}.price-category-body{padding:22px 20px}.price-category-body h3{font-size:16px}.price-category-budget{gap:12px}.price-category-budget strong{font-size:38px}}
+  @media(prefers-reduced-motion:reduce){.price-category-image img,.price-category-button{transition:none}}
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:library.shop_by_price.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:price_cards.card_background",
+      "default": "#F2E0E5"
+    },
+    {
+      "type": "color",
+      "id": "card_foreground",
+      "label": "t:price_cards.card_foreground",
+      "default": "#762247"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "t:price_cards.card_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:price_cards.columns_mobile",
+      "default": "1",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.shop_by_price.eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.shop_by_price.heading",
+      "default": "Shop by price"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:library.shop_by_price.columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "t:editor.section_gap",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "budget",
+      "name": "t:library.shop_by_price.block_0",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:library.shop_by_price.b0_image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:library.shop_by_price.b0_title",
+          "default": "The daily edit"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:library.shop_by_price.b0_collection"
+        },
+        {
+          "type": "number",
+          "id": "maximum",
+          "label": "t:library.shop_by_price.b0_maximum",
+          "default": 30,
+          "info": "t:price_cards.maximum_info"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "t:price_cards.description",
+          "default": "Add a short description of this collection."
+        },
+        {
+          "type": "text",
+          "id": "button",
+          "label": "t:price_cards.button",
+          "default": "Shop now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:library.shop_by_price.name",
+      "blocks": [
+        {
+          "type": "budget",
+          "settings": {
+            "title": "Lip essentials",
+            "description": "Lipsticks, glosses and liners",
+            "maximum": 25,
+            "button": "Shop now"
+          }
+        },
+        {
+          "type": "budget",
+          "settings": {
+            "title": "Face essentials",
+            "description": "Blush, bronzer and highlighter",
+            "maximum": 29,
+            "button": "Shop now"
+          }
+        },
+        {
+          "type": "budget",
+          "settings": {
+            "title": "Eye essentials",
+            "description": "Mascara, eyeliner and eyeshadow",
+            "maximum": 39,
+            "button": "Shop now"
+          }
+        },
+        {
+          "type": "budget",
+          "settings": {
+            "title": "Complexion edit",
+            "description": "Foundation, concealer and setting essentials",
+            "maximum": 59,
+            "button": "Shop now"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

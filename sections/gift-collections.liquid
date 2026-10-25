@@ -1,0 +1,313 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section bl-component-gift-collections">
+  {% render 'library-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading -%}
+  <bloome-tabs>
+    <div class="bl-tabs" role="tablist" aria-label="{{ section.settings.heading | escape }}">
+      {% for block in section.blocks -%}
+        <button
+          type="button"
+          role="tab"
+          id="Tab-{{ section.id }}-{{ block.id }}"
+          aria-controls="Panel-{{ section.id }}-{{ block.id }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+        >
+          {{ block.settings.title | escape }}
+        </button>
+      {%- endfor %}
+    </div>
+    {% for block in section.blocks %}
+      <div
+        class="bl-panel"
+        id="Panel-{{ section.id }}-{{ block.id }}"
+        role="tabpanel"
+        aria-labelledby="Tab-{{ section.id }}-{{ block.id }}"
+        tabindex="0"
+        {% unless forloop.first %}
+          hidden
+        {% endunless %}
+        {{ block.shopify_attributes }}
+      >
+        <div class="bl-split">
+          {% render 'library-media', image: block.settings.image %}
+          <div class="bl-copy">
+            <h3>{{ block.settings.heading | escape }}</h3>
+            <div class="bl-rte">{{ block.settings.text }}</div>
+            {% if block.settings.button != blank -%}
+              <a
+                class="button"
+                href="{{ block.settings.link | default: routes.all_products_collection_url }}"
+              >
+                {{- block.settings.button | escape }}
+                <span aria-hidden="true">&#8599;</span></a
+              >
+            {%- endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor -%}
+  </bloome-tabs>
+</div>
+{% schema %}
+{
+  "name": "t:library.gift_collections.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.gift_collections.eyebrow",
+      "default": "The Bloome edit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.gift_collections.heading",
+      "default": "A little something, thoughtfully chosen."
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "t:editor.section_gap",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "gift",
+      "name": "t:library.gift_collections.block_0",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:library.gift_collections.b0_title",
+          "default": "Everyday gifts"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:library.gift_collections.b0_image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:library.gift_collections.b0_heading",
+          "default": "Give a little daily luxury."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:library.gift_collections.b0_text",
+          "default": "<p>Discover a thoughtful edit of beauty essentials.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button",
+          "label": "t:library.gift_collections.b0_button",
+          "default": "Explore gifts"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:library.gift_collections.b0_link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:library.gift_collections.name",
+      "blocks": [
+        {
+          "type": "gift",
+          "settings": {
+            "title": "The daily set"
+          }
+        },
+        {
+          "type": "gift",
+          "settings": {
+            "title": "Little luxuries"
+          }
+        },
+        {
+          "type": "gift",
+          "settings": {
+            "title": "Travel rituals"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

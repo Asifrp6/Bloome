@@ -1,0 +1,324 @@
+{% render 'section-settings', section: section %}
+{% render 'library-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading %}
+{% if section.settings.product != blank %}{% render 'product-display', product: section.settings.product, section: section, featured: true %}
+{% else %}<div class="bl-split">{% render 'library-media' %}<div class="bl-copy"><h3>{{ section.settings.placeholder_title | escape }}</h3><div class="bl-rte">{{ section.settings.text }}</div><a class="button" href="{{ routes.all_products_collection_url }}">{{ 'bloome.shop_all' | t }}</a></div></div>{% endif %}
+{% schema %}
+{
+  "name": "t:library.featured_product.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:editor.show_dynamic_checkout",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "media_layout",
+      "label": "t:editor.media_layout",
+      "default": "stack",
+      "options": [
+        {
+          "value": "stack",
+          "label": "t:editor.media_layout_0"
+        },
+        {
+          "value": "grid",
+          "label": "t:editor.media_layout_1"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.featured_product.eyebrow",
+      "default": "The Bloome edit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.featured_product.heading",
+      "default": "One to fall in love with."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:library.featured_product.product"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_title",
+      "label": "t:library.featured_product.placeholder_title",
+      "default": "Meet your next daily favourite."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:library.featured_product.text",
+      "default": "<p>A little discovery for your daily ritual.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "t:editor.section_gap",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "presets": [
+    {
+      "name": "t:library.featured_product.name",
+      "blocks": [
+        {
+          "type": "vendor"
+        },
+        {
+          "type": "title"
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "buy_buttons"
+        },
+        {
+          "type": "description"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "information",
+      "name": "t:library.product_info.block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:library.product_info.heading",
+          "default": "The details"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:library.product_info.text"
+        }
+      ]
+    },
+    {
+      "type": "vendor",
+      "name": "t:editor.block_vendor",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "t:editor.block_title",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "t:editor.block_price",
+      "limit": 1
+    },
+    {
+      "type": "sku",
+      "name": "t:editor.block_sku",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:editor.block_buy_buttons",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "t:editor.block_description",
+      "limit": 1
+    },
+    {
+      "type": "custom_liquid",
+      "name": "t:editor.custom_liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "t:editor.custom_liquid"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

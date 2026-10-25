@@ -1,0 +1,12 @@
+<div data-predictive-response data-status="{{ 'editor.search_suggestions' | t }}">
+  {% if predictive_search.performed %}
+    <ul role="listbox" aria-label="{{ 'editor.search_suggestions' | t }}">
+      {% for suggestion in predictive_search.resources.queries %}<li role="option" aria-selected="false"><a href="{{ suggestion.url }}">{{ suggestion.text | escape }}</a></li>{% endfor %}
+      {% for item in predictive_search.resources.products %}<li role="option" aria-selected="false"><a href="{{ item.url }}">{% if item.featured_image %}{{ item.featured_image | image_url: width: 96 | image_tag: loading: 'lazy' }}{% endif %}{{ item.title | escape }} — {{ item.price | money }}</a></li>{% endfor %}
+      {% for item in predictive_search.resources.collections %}<li role="option" aria-selected="false"><a href="{{ item.url }}">{{ item.title | escape }}</a></li>{% endfor %}
+      {% for item in predictive_search.resources.pages %}<li role="option" aria-selected="false"><a href="{{ item.url }}">{{ item.title | escape }}</a></li>{% endfor %}
+      {% for item in predictive_search.resources.articles %}<li role="option" aria-selected="false"><a href="{{ item.url }}">{{ item.title | escape }}</a></li>{% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% schema %}{"name":"t:editor.search_suggestions","settings":[]}{% endschema %}

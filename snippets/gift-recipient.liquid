@@ -1,0 +1,14 @@
+{% doc %}
+  Collects Shopify gift card recipient line item properties.
+  @param {string} id - Unique owning section identifier
+{% enddoc %}
+<fieldset class="gift-recipient">
+  <legend>{{ 'editor.gift_recipient' | t }}</legend>
+  <label><input type="checkbox" name="properties[__shopify_send_gift_card_to_recipient]" value="true" data-gift-toggle> {{ 'editor.gift_send' | t }}</label>
+  <label for="RecipientEmail-{{ id }}">{{ 'editor.recipient_email' | t }}</label><input id="RecipientEmail-{{ id }}" type="email" name="properties[Recipient email]" data-gift-email>
+  <label for="RecipientName-{{ id }}">{{ 'editor.recipient_name' | t }}</label><input id="RecipientName-{{ id }}" type="text" name="properties[Recipient name]">
+  <label for="RecipientMessage-{{ id }}">{{ 'editor.recipient_message' | t }}</label><textarea id="RecipientMessage-{{ id }}" name="properties[Message]" maxlength="200" rows="3"></textarea>
+  <label for="RecipientDate-{{ id }}">{{ 'editor.recipient_date' | t }}</label><input id="RecipientDate-{{ id }}" type="date" name="properties[Send on]">
+  <input type="hidden" name="properties[__shopify_offset]" data-gift-offset>
+</fieldset>
+{% stylesheet %}.gift-recipient{display:grid;gap:12px;padding:16px;border:1px solid var(--color-border);margin-top:16px}.product-details .gift-recipient input{width:100%}.product-details .gift-recipient input[type=checkbox]{width:auto}.gift-recipient legend{font-size:14px;padding-inline:8px}{% endstylesheet %}

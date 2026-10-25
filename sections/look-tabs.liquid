@@ -1,0 +1,341 @@
+{% render 'section-settings', section: section %}
+<div class="bl-section bl-component-look-tabs" style="--look-image-height:{{ section.settings.portrait_height }}px">
+  {% render 'library-heading', eyebrow:section.settings.eyebrow, heading:section.settings.heading %}
+  <bloome-tabs class="look-showcase">
+    <div class="bl-tabs look-navigation" role="tablist" aria-orientation="vertical" aria-label="{{ section.settings.heading | escape }}">
+      {% for block in section.blocks %}<button type="button" role="tab" id="Tab-{{ section.id }}-{{ block.id }}" aria-controls="Panel-{{ section.id }}-{{ block.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">{{ block.settings.title | escape }}</button>{% endfor %}
+    </div>
+    {% for block in section.blocks %}
+      {% assign look_index = forloop.index0 %}{% assign previous_index = look_index | minus:1 %}{% assign next_index = look_index | plus:1 %}
+      <div class="bl-panel look-panel" id="Panel-{{ section.id }}-{{ block.id }}" role="tabpanel" aria-labelledby="Tab-{{ section.id }}-{{ block.id }}" tabindex="0" {% unless forloop.first %}hidden{% endunless %} {{ block.shopify_attributes }}>
+        <div class="look-panel-layout">
+          <div class="look-image-stage">
+            <div class="look-portrait">{% render 'library-media', image:block.settings.image, index:forloop.index %}</div>
+            {% if section.settings.show_previews %}
+              {% unless forloop.first %}{% assign previous_look = section.blocks[previous_index] %}<button class="look-preview look-preview--previous" type="button" data-look-index="{{ previous_index }}" aria-label="{{ 'look_showcase.view_look' | t: title:previous_look.settings.title | escape }}">{% if previous_look.settings.image %}{{ previous_look.settings.image | image_url:width:200 | image_tag:loading:'lazy',alt:'' }}{% else %}<span>{{ previous_look.settings.title | escape }}</span>{% endif %}</button>{% endunless %}
+              {% unless forloop.last %}{% assign next_look = section.blocks[next_index] %}<button class="look-preview look-preview--next" type="button" data-look-index="{{ next_index }}" aria-label="{{ 'look_showcase.view_look' | t: title:next_look.settings.title | escape }}">{% if next_look.settings.image %}{{ next_look.settings.image | image_url:width:200 | image_tag:loading:'lazy',alt:'' }}{% else %}<span>{{ next_look.settings.title | escape }}</span>{% endif %}</button>{% endunless %}
+            {% endif %}
+          </div>
+          <div class="bl-copy look-description" style="--section-alignment:left"><h3>{{ block.settings.heading | escape }}</h3><div class="bl-rte">{{ block.settings.text }}</div>{% if block.settings.button != blank %}<a class="button" href="{{ block.settings.link | default:routes.all_products_collection_url }}">{{ block.settings.button | escape }}</a>{% endif %}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </bloome-tabs>
+</div>
+{% stylesheet %}
+  .bl-component-look-tabs>.bl-heading{text-align:center;margin-bottom:38px}.bl-component-look-tabs>.bl-heading h2{text-transform:uppercase;font-weight:600;letter-spacing:-.035em}
+  .look-showcase{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,3fr);gap:clamp(24px,4vw,70px);align-items:center}
+  .look-showcase .look-navigation{display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin:0;padding:4px;overflow:visible;grid-column:1;grid-row:1}
+  .look-showcase .look-navigation [role=tab]{padding:4px 0;border:0;background:none;color:inherit;border-radius:0;text-transform:uppercase;font-size:17px;font-weight:550;line-height:1.4;min-height:30px;text-align:left}
+  .look-showcase .look-navigation [role=tab][aria-selected=true]{font-size:25px;text-decoration:underline;text-underline-offset:7px;text-decoration-thickness:2px;background:none;color:inherit}
+  .look-showcase>.look-panel{grid-column:2;grid-row:1;min-width:0}
+  .look-panel-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(180px,1fr);gap:clamp(25px,4vw,70px);align-items:center}
+  .look-image-stage{position:relative;min-width:0;padding:0 66px}
+  .look-portrait{width:min(100%,calc(var(--look-image-height,500px)*.75));margin-inline:auto}
+  .look-portrait>.bl-media{aspect-ratio:3/4;width:100%;border-radius:10px;overflow:hidden;background:var(--color-surface)}
+  .look-preview{position:absolute;width:78px;aspect-ratio:3/4;border:0;padding:0;border-radius:8px;overflow:hidden;cursor:pointer;color:var(--color-foreground);background:var(--color-surface)}.look-preview img{width:100%;height:100%;object-fit:cover}.look-preview span{display:grid;place-items:center;height:100%;padding:6px;font-size:11px;line-height:1.25;overflow-wrap:normal;word-break:normal;hyphens:manual;text-align:center}
+  .look-preview--next{top:0;right:0}.look-preview--previous{bottom:0;left:0}
+  .look-description{padding:0;max-width:300px}.look-description h3{font-size:15px;font-weight:600;letter-spacing:0;line-height:1.5;margin-bottom:5px}.look-description .bl-rte{font-size:14px;line-height:1.7}.look-description .button{margin-top:20px;min-height:42px;padding:10px 22px;border-radius:999px;background:transparent;color:inherit;border:1px solid currentColor;text-transform:uppercase;font-size:11px}
+  .look-panel:not([hidden]) .look-portrait,.look-panel:not([hidden]) .look-description{animation:bloome-look-enter .35s ease both}.look-panel:not([hidden]) .look-preview{animation:bloome-look-preview .45s ease both}
+  @keyframes bloome-look-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}@keyframes bloome-look-preview{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+  @media(max-width:1000px) and (min-width:761px){.look-showcase{grid-template-columns:130px minmax(0,1fr);gap:20px}.look-image-stage{padding-inline:42px}.look-preview{width:52px}.look-panel-layout{grid-template-columns:minmax(0,1.5fr) minmax(150px,1fr);gap:20px}}
+  @media(max-width:760px){.look-showcase{display:block}.look-showcase .look-navigation{flex-direction:row;align-items:center;gap:22px;overflow-x:auto;padding:6px 4px 14px;margin-bottom:22px}.look-showcase .look-navigation [role=tab]{font-size:13px;white-space:nowrap;flex:0 0 auto}.look-showcase .look-navigation [role=tab][aria-selected=true]{font-size:17px}.look-panel-layout{grid-template-columns:minmax(0,1fr);gap:26px}.look-image-stage{padding-inline:52px;max-width:440px;width:100%;margin-inline:auto}.look-preview{width:64px}.look-portrait{max-width:280px}.look-description{max-width:440px;width:100%;margin-inline:auto;text-align:center}.bl-component-look-tabs>.bl-heading{margin-bottom:22px}}
+  @media(prefers-reduced-motion:reduce){.look-panel:not([hidden]) .look-portrait,.look-panel:not([hidden]) .look-description,.look-panel:not([hidden]) .look-preview{animation:none}}
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:library.look_tabs.name",
+  "tag": "section",
+  "class": "bloome-library-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "portrait_height",
+      "label": "t:look_showcase.portrait_height",
+      "min": 320,
+      "max": 640,
+      "step": 10,
+      "default": 500,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_previews",
+      "label": "t:look_showcase.show_previews",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:library.look_tabs.eyebrow",
+      "default": "The Bloome edit"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:library.look_tabs.heading",
+      "default": "A mood for every moment."
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "t:editor.section_gap",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "step",
+      "name": "t:library.look_tabs.block_0",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:library.look_tabs.b0_title",
+          "default": "Your ritual"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:library.look_tabs.b0_image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:library.look_tabs.b0_heading",
+          "default": "Make room for yourself."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:library.look_tabs.b0_text",
+          "default": "<p>Explore textures, colours and essentials that fit your day.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button",
+          "label": "t:library.look_tabs.b0_button",
+          "default": "Shop the ritual"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:library.look_tabs.b0_link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:library.look_tabs.name",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Everyday",
+            "heading": "Your everyday glow."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Soft glam",
+            "heading": "A little extra radiance."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Bold",
+            "heading": "Make it your own."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Party",
+            "heading": "Your moment to shine."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Bridal",
+            "heading": "Beautifully yours."
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}

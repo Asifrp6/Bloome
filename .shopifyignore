@@ -1,0 +1,9 @@
+# Excluded from Shopify CLI push, pull, dev, and theme package.
+
+.tools/**
+*.md
+*.zip
+preview.html
+preview-sections.html
+.git/**
+node_modules/**

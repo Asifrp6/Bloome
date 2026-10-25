@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "contact": {
+      "type": "contact-form",
+      "settings": {
+        "eyebrow": "The Bloome edit",
+        "heading": "We would love to hear from you.",
+        "section_color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "contact"
+  ]
+}

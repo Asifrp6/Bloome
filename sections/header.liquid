@@ -1,0 +1,507 @@
+{% style %}#shopify-section-{{ section.id }} .beauty-header{min-height:{{ section.settings.header_height }}px}#shopify-section-{{ section.id }} .desktop-nav,#shopify-section-{{ section.id }} .header-actions{font-size:{{ section.settings.menu_font_size }}px}@media(max-width:760px){#shopify-section-{{ section.id }} .beauty-header{min-height:{{ section.settings.header_mobile_height }}px}}{% endstyle %}
+{% if section.settings.show_announcement %}
+  <div class="announcement full-width">{{ section.settings.announcement | escape }}</div>
+{% endif %}
+<header class="beauty-header beauty-header--{{ section.settings.layout | default: 'classic' }}{% if section.settings.mega_menu %} beauty-header--mega{% endif %}{% if section.settings.transparent %} beauty-header--transparent{% endif %}"{% if section.settings.transparent and section.settings.sticky %} data-transparent-header{% endif %}>
+  <a class="wordmark" href="{{ routes.root_url }}">{% render 'brand-logo', brand: section.settings.brand, image: section.settings.logo %}</a>
+  <nav class="desktop-nav" aria-label="{{ 'bloome.navigation' | t }}">
+    {% for link in section.settings.menu.links -%}
+      {% if link.links != blank %}
+        <details class="beauty-menu{% if section.settings.mega_menu %} beauty-menu--mega{% endif %}">
+          <summary>{{ link.title | escape }}</summary>
+          <div class="beauty-submenu">
+            <a class="text-link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            <div class="beauty-submenu-columns">
+              {% for child in link.links %}
+                <div>
+                  <a href="{{ child.url }}">{{ child.title | escape }}</a>
+                  {%- for grandchild in child.links -%}
+                    <a class="beauty-grandchild" href="{{ grandchild.url }}">
+                      {{- grandchild.title | escape -}}
+                    </a>
+                  {%- endfor %}
+                </div>
+              {% endfor -%}
+              {%- if section.settings.mega_menu and section.settings.promo_image != blank -%}
+                <a
+                  class="beauty-menu-promo"
+                  href="{{ section.settings.promo_link | default: routes.all_products_collection_url }}"
+                >
+                  {{- section.settings.promo_image | image_url: width: 500 | image_tag: loading: 'lazy' -}}
+                  <span>{{ section.settings.promo_title | escape }}</span></a
+                >
+              {%- endif %}
+            </div>
+          </div>
+        </details>
+      {% else -%}
+        <a href="{{ link.url }}">{{ link.title | escape }}</a>
+      {%- endif %}
+    {%- else -%}
+      <a href="{{ routes.all_products_collection_url }}">{{ 'bloome.shop_all' | t }}</a
+      ><a href="{{ routes.collections_url }}">{{ 'collections.title' | t }}</a
+      ><a href="{{ routes.search_url }}">{{ 'search.title' | t }}</a>
+    {%- endfor %}
+  </nav>
+  <div class="header-actions">{% if section.settings.show_account %}{% if shop.customer_accounts_enabled %}<shopify-account></shopify-account>{% endif %}{% endif %}
+    <a href="{{ routes.search_url }}" aria-label="{{ 'search.title' | t }}">&#8981;</a
+    ><a href="{{ routes.cart_url }}">{{ 'cart.title' | t }} ({{ cart.item_count }})</a>
+    <details class="mobile-nav">
+      <summary>{{ 'bloome.menu' | t }}</summary>
+      <nav>
+        {% for link in section.settings.menu.links -%}
+          {% if link.links != blank %}
+            <details class="beauty-menu{% if section.settings.mega_menu %} beauty-menu--mega{% endif %}">
+              <summary>{{ link.title | escape }}</summary>
+              <div class="beauty-submenu">
+                <a class="text-link" href="{{ link.url }}">{{ link.title | escape }}</a>
+                <div class="beauty-submenu-columns">
+                  {% for child in link.links %}
+                    <div>
+                      <a href="{{ child.url }}">{{ child.title | escape }}</a>
+                      {%- for grandchild in child.links -%}
+                        <a class="beauty-grandchild" href="{{ grandchild.url }}">
+                          {{- grandchild.title | escape -}}
+                        </a>
+                      {%- endfor %}
+                    </div>
+                  {% endfor -%}
+                  {%- if section.settings.mega_menu and section.settings.promo_image != blank -%}
+                    <a
+                      class="beauty-menu-promo"
+                      href="{{ section.settings.promo_link | default: routes.all_products_collection_url }}"
+                    >
+                      {{-
+                        section.settings.promo_image
+                        | image_url: width: 500
+                        | image_tag: loading: 'lazy'
+                      -}}
+                      <span>{{ section.settings.promo_title | escape }}</span></a
+                    >
+                  {%- endif %}
+                </div>
+              </div>
+            </details>
+          {% else -%}
+            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+          {%- endif %}
+        {%- else -%}
+          <a href="{{ routes.all_products_collection_url }}">{{ 'bloome.shop_all' | t }}</a
+          ><a href="{{ routes.collections_url }}">{{ 'collections.title' | t }}</a
+          ><a href="{{ routes.search_url }}">{{ 'search.title' | t }}</a>
+        {%- endfor %}
+      </nav>
+    </details>
+  </div>
+</header>
+{% if section.settings.transparent %}
+  {% style %}
+    #shopify-section-{{ section.id }}{background:transparent}
+    #shopify-section-{{ section.id }} .beauty-header--transparent{background:transparent;color:{{ section.settings.transparent_text }}}
+    #shopify-section-{{ section.id }} .beauty-header--transparent.is-scrolled{background:var(--color-background,#faf7ef);color:var(--color-foreground,#49323f)}
+    {% if request.page_type == 'index' %}
+      .shopify-section-group-header-group:has(#shopify-section-{{ section.id }}){position:{% if section.settings.sticky %}fixed{% else %}absolute{% endif %};top:0;left:0;right:0;z-index:40;background:transparent}
+      .shopify-section-group-header-group:has(#shopify-section-{{ section.id }} .is-scrolled){background:var(--color-background,#faf7ef)}
+    {% endif %}
+  {% endstyle %}
+{% endif %}
+{% if section.settings.sticky %}
+  {% if section.settings.transparent %}
+    {% style %}#shopify-section-{{ section.id }}{position:sticky;top:0;z-index:30;background:transparent}#shopify-section-{{ section.id }}:has(.is-scrolled){background:var(--color-background,#faf7ef)}{% endstyle %}
+  {% else %}
+    {% style %}#shopify-section-{{ section.id }}{position:sticky;top:0;z-index:30;background:var(--color-background,#faf7ef)}{% endstyle %}
+  {% endif %}
+{% endif %}
+{% stylesheet %}
+
+  .beauty-menu > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 15px 0;
+  }
+  .beauty-menu > summary:after {
+    content: ' +';
+    font-size: 10px;
+  }
+  .beauty-submenu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    padding: 30px max(25px, calc((100vw - 1280px) / 2));
+    background: var(--color-background, var(--color-background));
+    box-shadow: 0 12px 20px #49323f15;
+    border-block: 1px solid var(--color-border);
+    z-index: 40;
+  }
+  .beauty-submenu-columns {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 25px;
+    margin-top: 25px;
+  }
+  .beauty-submenu-columns > div {
+    display: grid;
+    gap: 15px;
+    align-content: start;
+  }
+  .beauty-grandchild {
+    font-size: 11px;
+    opacity: 0.8;
+  }
+  .beauty-menu-promo img {
+    max-height: 180px;
+    width: 100%;
+    object-fit: cover;
+  }
+  .beauty-menu-promo span {
+    display: block;
+    margin-top: 10px;
+  }
+  .mobile-nav .beauty-submenu {
+    position: static;
+    width: auto;
+    max-width: none;
+    padding: 20px 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .mobile-nav .beauty-submenu-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mobile-nav .beauty-menu > summary {
+    padding: 10px 0;
+  }
+  .announcement {
+    background: #49323f;
+    color: #fff8eb;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .beauty-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    min-height: 100px;
+  }
+  .beauty-header--classic {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .beauty-header--classic .desktop-nav {
+    justify-content: center;
+  }
+  .beauty-header--centered {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    justify-items: center;
+    row-gap: 4px;
+  }
+  .beauty-header--centered .wordmark {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .beauty-header--centered .header-actions {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .beauty-header--centered .desktop-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    justify-content: center;
+    padding-bottom: 8px;
+  }
+  .beauty-header--stacked {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 0;
+  }
+  .beauty-header--stacked .wordmark {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .beauty-header--stacked .header-actions {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .beauty-header--stacked .desktop-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    justify-content: flex-start;
+    padding-block: 6px 10px;
+    border-top: 1px solid var(--color-border);
+  }
+  .beauty-header--minimal .desktop-nav {
+    display: none;
+  }
+  .beauty-header--minimal .mobile-nav {
+    display: block;
+  }
+  .beauty-header--split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .beauty-header--split .desktop-nav {
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .beauty-header--split .wordmark {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+  .beauty-header--split .header-actions {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .beauty-header--transparent .beauty-submenu,
+  .beauty-header--transparent .mobile-nav nav {
+    color: var(--color-foreground, #49323f);
+    background: var(--color-background, #faf7ef);
+  }
+  .beauty-header:not(.beauty-header--mega) .beauty-menu {
+    position: relative;
+  }
+  .beauty-header:not(.beauty-header--mega) .beauty-submenu {
+    left: 0;
+    right: auto;
+    width: max-content;
+    min-width: 220px;
+    max-width: 280px;
+    padding: 16px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+  }
+  .beauty-header:not(.beauty-header--mega) .beauty-submenu-columns {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .beauty-header:not(.beauty-header--mega) .mobile-nav .beauty-submenu {
+    width: auto;
+    max-width: none;
+    border: 0;
+    border-radius: 0;
+    padding: 12px 0 0;
+  }
+  .desktop-nav,
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    font-size: 12px;
+  }
+  .header-actions {
+    gap:var(--grid-gap,20px);
+  }
+  .header-actions > a:first-child {
+    font-size: 29px;
+  }
+  .mobile-nav {
+    display: none;
+  }
+  .mobile-nav summary {
+    cursor: pointer;
+    padding: 10px;
+  }
+  .mobile-nav nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: var(--color-background);
+    padding: 25px;
+    display: grid;
+    gap:var(--grid-gap,20px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  @media (max-width: 760px) {
+    .beauty-header--classic,
+    .beauty-header--centered,
+    .beauty-header--stacked,
+    .beauty-header--minimal,
+    .beauty-header--split {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .desktop-nav {
+      display: none;
+    }
+    .mobile-nav {
+      display: block;
+    }
+    .beauty-header {
+      min-height: 80px;
+    }
+    .header-actions {
+      gap: 10px;
+    }
+  }
+  @media (max-width: 360px) {
+    .beauty-header { gap: 8px; }
+    .beauty-header .wordmark { font-size: 24px; }
+    .beauty-header .wordmark img { max-width: 72px; }
+    .header-actions { gap: 8px; }
+    .header-actions a,.mobile-nav summary { font-size: 11px; }
+    .mobile-nav summary { padding-inline: 2px; }
+  }
+
+{% endstylesheet %}
+{% javascript %}document.addEventListener('keydown',event=>{if(event.key==='Escape'){document.querySelectorAll('.beauty-menu[open],.mobile-nav[open]').forEach(menu=>{menu.open=false;menu.querySelector('summary')?.focus();});}});document.addEventListener('click',event=>{document.querySelectorAll('.beauty-menu[open]').forEach(menu=>{if(!menu.contains(event.target))menu.open=false;});});const transparentHeader=document.querySelector('[data-transparent-header]');if(transparentHeader){const paint=()=>transparentHeader.classList.toggle('is-scrolled',window.scrollY>8);paint();window.addEventListener('scroll',paint,{passive:true});}{% endjavascript %}
+{% schema %}
+{
+  "name": "t:bloome.section_0.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand",
+      "label": "t:editor.brand_override"
+    },
+    {
+      "type": "text",
+      "id": "announcement",
+      "label": "t:bloome.section_0.announcement",
+      "default": "A little ritual. A little radiance. A whole lot of you."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:bloome.section_0.menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:library.header.layout",
+      "default": "classic",
+      "options": [
+        { "value": "classic", "label": "t:library.header.layout_classic" },
+        { "value": "centered", "label": "t:library.header.layout_centered" },
+        { "value": "stacked", "label": "t:library.header.layout_stacked" },
+        { "value": "minimal", "label": "t:library.header.layout_minimal" },
+        { "value": "split", "label": "t:library.header.layout_split" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "mega_menu",
+      "label": "t:library.header.mega_menu",
+      "info": "t:library.header.mega_menu_info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "t:library.header.announcement",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "t:library.header.sticky",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent",
+      "label": "t:library.header.transparent",
+      "info": "t:library.header.transparent_info",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "transparent_text",
+      "label": "t:library.header.transparent_text",
+      "default": "#49323F",
+      "visible_if": "{{ section.settings.transparent }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_image",
+      "label": "t:library.header.image",
+      "visible_if": "{{ section.settings.mega_menu }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_title",
+      "label": "t:library.header.title",
+      "default": "The daily edit",
+      "visible_if": "{{ section.settings.mega_menu }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_link",
+      "label": "t:library.header.link",
+      "visible_if": "{{ section.settings.mega_menu }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:editor.logo_override"
+    },
+    {
+      "type": "range",
+      "id": "header_height",
+      "label": "t:editor.header_height",
+      "default": 94,
+      "min": 60,
+      "max": 140,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "header_mobile_height",
+      "label": "t:editor.header_mobile_height",
+      "default": 76,
+      "min": 60,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "menu_font_size",
+      "label": "t:editor.menu_font_size",
+      "default": 13,
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "t:editor.show_search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "t:editor.show_account",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:bloome.section_0.name"
+    }
+  ]
+}
+{% endschema %}

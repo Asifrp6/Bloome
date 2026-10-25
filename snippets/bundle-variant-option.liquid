@@ -1,0 +1,11 @@
+{% doc %}
+  Renders one bundle variant choice.
+  @param {variant} variant - Variant to render
+  @param {product} product - Product that owns the variant
+{% enddoc %}
+<option
+  value="{{ variant.id }}"
+  data-price="{{ variant.price }}"
+  {% if variant.id == product.selected_or_first_available_variant.id %}selected{% endif %}
+  {% unless variant.available %}disabled{% endunless %}
+>{{ variant.title | escape }} / {{ variant.price | money }}</option>

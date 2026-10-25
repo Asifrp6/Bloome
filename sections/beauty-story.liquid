@@ -1,0 +1,266 @@
+{% render 'section-settings', section: section %}
+<section class="beauty-story" id="makeup">
+  <div class="story-art">
+    {% if section.settings.image -%}
+      {{-
+        section.settings.image
+        | image_url: width: 1200
+        | image_tag: loading: 'lazy', widths: '400, 700, 1200', sizes: '(min-width:760px) 50vw, 100vw'
+      -}}
+    {%- else %}
+      {% render 'photo-fallback', index: 6 %}
+    {%- endif %}
+  </div>
+  <div class="story-copy">
+    <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    <h2>
+      {{ section.settings.heading | escape }}
+      <em>{{ section.settings.accent | escape }}</em>
+    </h2>
+    <p>{{ section.settings.description | escape }}</p>
+    <a
+      class="button button--light"
+      href="{{ section.settings.link | default: routes.all_products_collection_url }}"
+    >
+      {{- section.settings.button | escape }} &#8599;</a
+    >
+  </div>
+</section>
+<section class="beauty-philosophy" id="philosophy">
+  <span aria-hidden="true">&#10035;</span>
+  <p class="eyebrow">{{ section.settings.philosophy_label | escape }}</p>
+  <h2>{{ section.settings.philosophy | escape }}</h2>
+  <p>{{ section.settings.philosophy_text | escape }}</p>
+</section>
+{% stylesheet %}
+.beauty-story{display:grid;grid-template-columns:1fr 1fr;min-height:460px;background:#49323f;color:#fff8eb;overflow:hidden}.story-art{position:relative;min-height:460px;overflow:hidden;background:#b07979;display:grid;place-items:center}.story-art>img{height:100%;width:100%;object-fit:cover;position:absolute}.colour-swipe{position:absolute;width:180px;height:560px;border-radius:50%;background:linear-gradient(90deg,#9e3f52,#c9707a 35%,#e09d9e 55%,#a54e5c);transform:rotate(35deg);box-shadow:inset -10px 0 20px #7f304659}.story-lip{transform:scale(1.35) rotate(-30deg);z-index:1}.story-art-word{position:absolute;bottom:-33px;left:8px;font-family:Georgia,serif;font-size:160px;font-style:italic;letter-spacing:-12px;color:#f6ddd070}.story-copy{padding:65px 48px;align-self:center}.story-copy h2{font-size:clamp(40px,4.4vw,65px);font-weight:400;line-height:1.07;letter-spacing:-.05em}.story-copy h2 em{font-family:Georgia,serif;color:#e0b2b6}.story-copy>p:not(.eyebrow){font-size:13px;line-height:1.8;max-width:300px;margin:24px 0 30px}.beauty-philosophy{padding:75px 15%;text-align:center}.beauty-philosophy>span{font-size:44px;color:#7d5366}.beauty-philosophy .eyebrow{margin:18px 0}.beauty-philosophy h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(27px,3vw,43px);line-height:1.25;letter-spacing:-.035em}.beauty-philosophy>p:last-child{font-size:12px;line-height:1.8;max-width:430px;margin:22px auto 0;color:color-mix(in srgb,var(--color-foreground) 75%,transparent)}@media(max-width:760px){.beauty-story{grid-template-columns:1fr}.story-art{min-height:350px}.story-copy{padding:40px 26px}.beauty-philosophy{padding:50px 12px}.story-art-word{font-size:135px}}
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:bloome.section_4.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:bloome.section_4.image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:bloome.section_4.eyebrow",
+      "default": "A little colour. A lot of you."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:bloome.section_4.heading",
+      "default": "Less rules."
+    },
+    {
+      "type": "text",
+      "id": "accent",
+      "label": "t:bloome.section_4.accent",
+      "default": "More play."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:bloome.section_4.description",
+      "default": "A soft flush. A bold lip. Whatever feels like you today. Meet makeup that moves with your mood."
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "t:bloome.section_4.button",
+      "default": "Explore makeup"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:bloome.section_4.link"
+    },
+    {
+      "type": "text",
+      "id": "philosophy_label",
+      "label": "t:bloome.section_4.philosophy_label",
+      "default": "Beauty, on your terms"
+    },
+    {
+      "type": "text",
+      "id": "philosophy",
+      "label": "t:bloome.section_4.philosophy",
+      "default": "Not a new you. Just more you."
+    },
+    {
+      "type": "text",
+      "id": "philosophy_text",
+      "label": "t:bloome.section_4.philosophy_text",
+      "default": "Your beauty ritual should feel like a little moment for yourself. Simple steps. Beautiful textures. Room to be you."
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_design"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "label": "t:editor.section_color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:editor.content_width",
+      "default": "page",
+      "options": [
+        {
+          "value": "page",
+          "label": "t:editor.content_width_0"
+        },
+        {
+          "value": "narrow",
+          "label": "t:editor.content_width_1"
+        },
+        {
+          "value": "full",
+          "label": "t:editor.content_width_2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:editor.text_alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:editor.text_alignment_0"
+        },
+        {
+          "value": "center",
+          "label": "t:editor.text_alignment_1"
+        },
+        {
+          "value": "right",
+          "label": "t:editor.text_alignment_2"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_typography",
+      "label": "t:editor.custom_typography",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "t:editor.heading_size",
+      "default": 46,
+      "min": 24,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "heading_mobile_size",
+      "label": "t:editor.heading_mobile_size",
+      "default": 34,
+      "min": 22,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "t:editor.text_size",
+      "default": 14,
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "visible_if": "{{ section.settings.custom_typography }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "t:editor.image_radius",
+      "default": 0,
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:editor.padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:editor.padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_top",
+      "label": "t:editor.padding_mobile_top",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile_bottom",
+      "label": "t:editor.padding_mobile_bottom",
+      "default": 30,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:editor.section_visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_desktop",
+      "label": "t:editor.hide_desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "t:editor.hide_mobile",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:bloome.section_4.name"
+    }
+  ]
+}
+{% endschema %}

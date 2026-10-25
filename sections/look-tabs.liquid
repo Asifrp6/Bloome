@@ -1,5 +1,7 @@
 {% render 'section-settings', section: section %}
-<div class="bl-section bl-component-look-tabs" style="--look-image-height:{{ section.settings.portrait_height }}px">
+<div class="bl-section bl-component-look-tabs" style="--look-image-height:{{ section.settings.portrait_height }}px"{% if section.settings.change_on_scroll %} data-look-scroll{% endif %}>
+  <div class="look-scroll" style="--look-steps:{{ section.blocks.size }}">
+  <div class="look-sticky">
   {% render 'library-heading', eyebrow:section.settings.eyebrow, heading:section.settings.heading %}
   <bloome-tabs class="look-showcase">
     <div class="bl-tabs look-navigation" role="tablist" aria-orientation="vertical" aria-label="{{ section.settings.heading | escape }}">
@@ -21,9 +23,11 @@
       </div>
     {% endfor %}
   </bloome-tabs>
+  </div>
+  </div>
 </div>
 {% stylesheet %}
-  .bl-component-look-tabs>.bl-heading{text-align:center;margin-bottom:38px}.bl-component-look-tabs>.bl-heading h2{text-transform:uppercase;font-weight:600;letter-spacing:-.035em}
+  .bl-component-look-tabs .bl-heading{text-align:center;margin-bottom:38px}.bl-component-look-tabs .bl-heading h2{text-transform:uppercase;font-weight:600;letter-spacing:-.035em}
   .look-showcase{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,3fr);gap:clamp(24px,4vw,70px);align-items:center}
   .look-showcase .look-navigation{display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin:0;padding:4px;overflow:visible;grid-column:1;grid-row:1}
   .look-showcase .look-navigation [role=tab]{padding:4px 0;border:0;background:none;color:inherit;border-radius:0;text-transform:uppercase;font-size:17px;font-weight:550;line-height:1.4;min-height:30px;text-align:left}
@@ -39,8 +43,9 @@
   .look-panel:not([hidden]) .look-portrait,.look-panel:not([hidden]) .look-description{animation:bloome-look-enter .35s ease both}.look-panel:not([hidden]) .look-preview{animation:bloome-look-preview .45s ease both}
   @keyframes bloome-look-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}@keyframes bloome-look-preview{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
   @media(max-width:1000px) and (min-width:761px){.look-showcase{grid-template-columns:130px minmax(0,1fr);gap:20px}.look-image-stage{padding-inline:42px}.look-preview{width:52px}.look-panel-layout{grid-template-columns:minmax(0,1.5fr) minmax(150px,1fr);gap:20px}}
-  @media(max-width:760px){.look-showcase{display:block}.look-showcase .look-navigation{flex-direction:row;align-items:center;gap:22px;overflow-x:auto;padding:6px 4px 14px;margin-bottom:22px}.look-showcase .look-navigation [role=tab]{font-size:13px;white-space:nowrap;flex:0 0 auto}.look-showcase .look-navigation [role=tab][aria-selected=true]{font-size:17px}.look-panel-layout{grid-template-columns:minmax(0,1fr);gap:26px}.look-image-stage{padding-inline:52px;max-width:440px;width:100%;margin-inline:auto}.look-preview{width:64px}.look-portrait{max-width:280px}.look-description{max-width:440px;width:100%;margin-inline:auto;text-align:center}.bl-component-look-tabs>.bl-heading{margin-bottom:22px}}
-  @media(prefers-reduced-motion:reduce){.look-panel:not([hidden]) .look-portrait,.look-panel:not([hidden]) .look-description,.look-panel:not([hidden]) .look-preview{animation:none}}
+  @media(max-width:760px){.look-showcase{display:block}.look-showcase .look-navigation{flex-direction:row;align-items:center;gap:22px;overflow-x:auto;padding:6px 4px 14px;margin-bottom:22px}.look-showcase .look-navigation [role=tab]{font-size:13px;white-space:nowrap;flex:0 0 auto}.look-showcase .look-navigation [role=tab][aria-selected=true]{font-size:17px}.look-panel-layout{grid-template-columns:minmax(0,1fr);gap:26px}.look-image-stage{padding-inline:52px;max-width:440px;width:100%;margin-inline:auto}.look-preview{width:64px}.look-portrait{max-width:280px}.look-description{max-width:440px;width:100%;margin-inline:auto;text-align:center}.bl-component-look-tabs .bl-heading{margin-bottom:22px}}
+  @media(min-width:761px){.bl-component-look-tabs[data-look-scroll] .look-scroll{height:calc(var(--look-steps, 1) * 68vh)}.bl-component-look-tabs[data-look-scroll] .look-sticky{position:sticky;top:88px}}
+  @media(prefers-reduced-motion:reduce){.look-panel:not([hidden]) .look-portrait,.look-panel:not([hidden]) .look-description,.look-panel:not([hidden]) .look-preview{animation:none}.bl-component-look-tabs[data-look-scroll] .look-scroll{height:auto}.bl-component-look-tabs[data-look-scroll] .look-sticky{position:static}}
 {% endstylesheet %}
 {% schema %}
 {
@@ -62,6 +67,13 @@
       "type": "checkbox",
       "id": "show_previews",
       "label": "t:look_showcase.show_previews",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "change_on_scroll",
+      "label": "t:look_showcase.change_on_scroll",
+      "info": "t:look_showcase.change_on_scroll_info",
       "default": true
     },
     {

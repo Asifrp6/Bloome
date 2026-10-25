@@ -43,9 +43,9 @@
       ><a href="{{ routes.search_url }}">{{ 'search.title' | t }}</a>
     {%- endfor %}
   </nav>
-  <div class="header-actions">{% if section.settings.show_account %}{% if shop.customer_accounts_enabled %}<shopify-account></shopify-account>{% endif %}{% endif %}
-    <a class="header-icon" href="{{ routes.search_url }}" aria-label="{{ 'search.title' | t }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.25" stroke="currentColor" stroke-width="1.5"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="m12.5 12.5 4.2 4.2"/></svg></a>
-    <a class="header-cart" href="{{ routes.cart_url }}"><span class="header-icon" aria-hidden="true">{{ 'icon-cart.svg' | inline_asset_content }}</span><span class="header-cart-count">{{ cart.item_count }}</span><span class="visually-hidden">{{ 'cart.title' | t }}</span></a>
+  <div class="header-actions">{% if section.settings.show_account %}{% if shop.customer_accounts_enabled %}<shopify-account><span class="header-icon" slot="signed-out-avatar"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.25" stroke="currentColor" stroke-width="1.75"/><path d="M5.2 19.25c.45-3.5 3.05-5.25 6.8-5.25s6.35 1.75 6.8 5.25" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg><span class="visually-hidden">{{ 'editor.account' | t }}</span></span></shopify-account>{% endif %}{% endif %}
+    <a class="header-icon" href="{{ routes.search_url }}" aria-label="{{ 'search.title' | t }}"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.75"/><path d="M15.4 15.4 20.4 20.4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></a>
+    <a class="header-cart" href="{{ routes.cart_url }}"><span class="header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 8.2h11l-.9 9.1a1.8 1.8 0 0 1-1.8 1.6H9.2a1.8 1.8 0 0 1-1.8-1.6L6.5 8.2Z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M9.2 8.1V6.8A2.8 2.8 0 0 1 12 4a2.8 2.8 0 0 1 2.8 2.8v1.3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span><span class="header-cart-count">({{ cart.item_count }})</span><span class="visually-hidden">{{ 'cart.title' | t }}</span></a>
     <details class="mobile-nav">
       <summary>{{ 'bloome.menu' | t }}</summary>
       <nav>
@@ -308,12 +308,28 @@
   .header-actions {
     gap:var(--grid-gap,20px);
   }
-  .header-actions .header-icon {
+  .header-actions {
+    --shopify-account-avatar-size: var(--icon-size, 22px);
+    --shopify-account-signed-in-avatar-size: var(--icon-size, 22px);
+  }
+  .header-actions shopify-account,
+  .header-actions .header-icon,
+  .header-actions shopify-account::part(signed-out-avatar) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: var(--icon-size, 22px);
     height: var(--icon-size, 22px);
+    min-width: var(--icon-size, 22px);
+    min-height: var(--icon-size, 22px);
+    padding: 0;
+    background: transparent;
+    color: inherit;
   }
-  .header-actions shopify-account {
-    font-size: var(--icon-size, 22px);
+  .header-actions .header-icon svg {
+    display: block;
+    width: var(--icon-size, 22px);
+    height: var(--icon-size, 22px);
   }
   .mobile-nav {
     display: none;
@@ -362,7 +378,7 @@
     .beauty-header .wordmark { font-size: 24px; }
     .beauty-header .wordmark img { max-width: 72px; }
     .header-actions { gap: 8px; }
-    .header-actions a,.mobile-nav summary { font-size: 11px; }
+    .mobile-nav summary { font-size: 11px; }
     .mobile-nav summary { padding-inline: 2px; }
   }
 

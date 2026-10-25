@@ -736,9 +736,9 @@
     "fallback_colors_group": "Base colors"
   },
   "slider": {
-    "layout": "Slideshow layout",
-    "desktop_height": "Height on desktop",
-    "mobile_height": "Height on mobile",
+    "layout": "Hero height",
+    "desktop_height": "Hero height on desktop",
+    "mobile_height": "Hero height on mobile",
     "show_thumbnails": "Show image thumbnails",
     "show_arrows": "Show previous and next buttons",
     "uppercase_heading": "Use uppercase headings",
@@ -777,6 +777,8 @@
   "look_showcase": {
     "portrait_height": "Portrait height",
     "show_previews": "Show adjacent look previews",
+    "change_on_scroll": "Change look while scrolling",
+    "change_on_scroll_info": "On larger screens, scrolling through this section moves through each look.",
     "view_look": "View {{ title }}"
   },
   "price_cards": {

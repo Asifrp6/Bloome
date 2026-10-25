@@ -229,11 +229,11 @@
       if (this.ready) { if(this.lookMedia){this.lookMedia.addEventListener('change',this.lookLayout);this.lookLayout();} return; }
       this.ready = true;
       this.tabs = [...this.querySelectorAll('[role=tab]')];
-      if(this.classList.contains('look-showcase')){this.lookMedia=matchMedia('(max-width:760px)');this.lookLayout=()=>this.querySelector('[role=tablist]').setAttribute('aria-orientation',this.lookMedia.matches?'horizontal':'vertical');this.lookMedia.addEventListener('change',this.lookLayout);this.lookLayout();}
+      if(this.classList.contains('look-showcase')){this.lookMedia=matchMedia('(max-width:760px)');this.lookLayout=()=>this.querySelector('[role=tablist]').setAttribute('aria-orientation',this.lookMedia.matches?'horizontal':'vertical');this.lookMedia.addEventListener('change',this.lookLayout);this.lookLayout();this.lookScrollRoot=this.closest('[data-look-scroll]')?.querySelector('.look-scroll');if(this.lookScrollRoot&&!(window.Shopify&&Shopify.designMode)){this.onLookScroll=()=>{if(this.lookLock||matchMedia('(max-width:760px)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const count=this.tabs.length;if(!count)return;const start=this.lookScrollRoot.getBoundingClientRect().top+window.scrollY;const distance=Math.max(this.lookScrollRoot.offsetHeight-window.innerHeight,1);const progress=Math.min(1,Math.max(0,(window.scrollY-start)/distance));const index=Math.min(count-1,Math.floor(progress*count));if(index===this.lookIndex)return;this.lookIndex=index;this.activate(this.tabs[index]);};window.addEventListener('scroll',this.onLookScroll,{passive:true});this.onLookScroll();}}
       this.addEventListener('click', (e) => {
         const tab = e.target.closest('[role=tab]');
-        if (tab) this.activate(tab);
-        const preview=e.target.closest('[data-look-index]');if(preview){const target=this.tabs[Number(preview.dataset.lookIndex)];if(target){this.activate(target);target.focus({preventScroll:true});}}
+        if (tab) { this.activate(tab); if(this.lookScrollRoot) this.scrollToLook(this.tabs.indexOf(tab)); }
+        const preview=e.target.closest('[data-look-index]');if(preview){const lookIndex=Number(preview.dataset.lookIndex);const target=this.tabs[lookIndex];if(target){this.activate(target);if(this.lookScrollRoot)this.scrollToLook(lookIndex);target.focus({preventScroll:true});}}
       });
       this.addEventListener('keydown', (e) => {
         const i = this.tabs.indexOf(e.target);
@@ -259,7 +259,8 @@
       };
       this.addEventListener('shopify:block:select',this.blockSelect);
     }
-    disconnectedCallback(){this.lookMedia?.removeEventListener('change',this.lookLayout);}
+    disconnectedCallback(){this.lookMedia?.removeEventListener('change',this.lookLayout);if(this.onLookScroll)window.removeEventListener('scroll',this.onLookScroll);}
+    scrollToLook(index){if(!this.lookScrollRoot||index<0||matchMedia('(max-width:760px)').matches)return;const count=this.tabs.length;const distance=Math.max(this.lookScrollRoot.offsetHeight-window.innerHeight,1);const start=this.lookScrollRoot.getBoundingClientRect().top+window.scrollY;const target=start+(distance*index)/count+4;this.lookLock=true;this.lookIndex=index;window.scrollTo({top:target,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});window.setTimeout(()=>{this.lookLock=false;},700);}
     activate(tab) {
       this.tabs.forEach((t) => {
         const active = t === tab;

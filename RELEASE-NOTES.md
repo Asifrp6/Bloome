@@ -1,3 +1,8 @@
+# Bloome 0.3.5
+
+- Theme settings now control icon size, button design, button colors, and button border.
+- Buttons follow those settings instead of a fixed pill shape, and header search and cart use scalable icons.
+
 # Bloome 0.3.4
 
 - Header can be transparent and sit over the homepage hero. Sticky header fills in with the page background after scroll.

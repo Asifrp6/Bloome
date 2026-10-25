@@ -14,7 +14,7 @@
     {{ content_for_header }}
   </head>
 
-  <body data-motion="{% if settings.enable_animations %}on{% else %}off{% endif %}">
+  <body data-motion="{% if settings.enable_animations %}on{% else %}off{% endif %}" data-button-style="{{ settings.button_style | default: 'solid' }}">
     <a class="skip-link" href="#MainContent">{{ 'bloome.skip' | t }}</a>
     {% sections 'header-group' %}
 

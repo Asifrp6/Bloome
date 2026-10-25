@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Bloome",
-    "theme_version": "0.3.4",
+    "theme_version": "0.3.5",
     "theme_author": "Bloome",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://help.shopify.com/manual/online-store/themes"
@@ -290,12 +290,40 @@
         "unit": "px"
       },
       {
+        "type": "color",
+        "id": "button_border_color",
+        "label": "t:editor.button_border_color",
+        "default": "#49323F"
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "t:editor.button_style",
+        "default": "solid",
+        "options": [
+          { "value": "solid", "label": "t:editor.button_style_solid" },
+          { "value": "outline", "label": "t:editor.button_style_outline" },
+          { "value": "pill", "label": "t:editor.button_style_pill" },
+          { "value": "pill-outline", "label": "t:editor.button_style_pill_outline" }
+        ]
+      },
+      {
         "type": "range",
         "id": "button_border_width",
         "label": "t:editor.button_border_width",
         "default": 1,
         "min": 0,
-        "max": 3,
+        "max": 4,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "icon_size",
+        "label": "t:editor.icon_size",
+        "default": 22,
+        "min": 14,
+        "max": 40,
         "step": 1,
         "unit": "px"
       },

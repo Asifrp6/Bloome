@@ -44,8 +44,8 @@
     {%- endfor %}
   </nav>
   <div class="header-actions">{% if section.settings.show_account %}{% if shop.customer_accounts_enabled %}<shopify-account></shopify-account>{% endif %}{% endif %}
-    <a href="{{ routes.search_url }}" aria-label="{{ 'search.title' | t }}">&#8981;</a
-    ><a href="{{ routes.cart_url }}">{{ 'cart.title' | t }} ({{ cart.item_count }})</a>
+    <a class="header-icon" href="{{ routes.search_url }}" aria-label="{{ 'search.title' | t }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.25" stroke="currentColor" stroke-width="1.5"/><path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="m12.5 12.5 4.2 4.2"/></svg></a>
+    <a class="header-cart" href="{{ routes.cart_url }}"><span class="header-icon" aria-hidden="true">{{ 'icon-cart.svg' | inline_asset_content }}</span><span class="header-cart-count">{{ cart.item_count }}</span><span class="visually-hidden">{{ 'cart.title' | t }}</span></a>
     <details class="mobile-nav">
       <summary>{{ 'bloome.menu' | t }}</summary>
       <nav>
@@ -308,8 +308,12 @@
   .header-actions {
     gap:var(--grid-gap,20px);
   }
-  .header-actions > a:first-child {
-    font-size: 29px;
+  .header-actions .header-icon {
+    width: var(--icon-size, 22px);
+    height: var(--icon-size, 22px);
+  }
+  .header-actions shopify-account {
+    font-size: var(--icon-size, 22px);
   }
   .mobile-nav {
     display: none;
